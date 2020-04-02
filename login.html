@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>乐学秀管理系统·登录</title>
+<link rel="stylesheet" type="text/css" href="css/base.css"/>
+<link rel="stylesheet" type="text/css" href="css/register.css"/>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.md5.js"></script>
+</head>
+<body>
+	<div class="fbi__modal register">
+		<p class="fb f20 color999" style="margin-top:-70px;margin-bottom: 20px;">乐学秀机构登录页面</p>
+	    <form method="post">
+	        <div  class="login-tab">
+	            <div class="fbi__modal__input">
+	                <img src="img/user.png" alt="">
+	                <input type="text" id="username" class="username" name="username" placeholder="请输入用户名">
+	            </div>
+	            <div class="fbi__modal__input fbi__modal__input--margin">
+	                <img src="img/pass.png" alt="">
+	                <input type="password" id="password" class="password" name="password" placeholder="请输入密码">
+	            </div>
+	            <input type="button" class="fbi__btn loginBtn mt30" id="login" value="登录">
+				<a class="dis_biock w100 tc lineH220 mt20 " href="register.html">没有账号去，去注册</a>
+				<a class="dis_biock w100 tc lineH220 mt20 " href="appletLogin.html">用户登录</a>
+	        </div>
+	    </form>
+	</div>
+	<div class="slideshow">
+		<div class="slideshow-image" style="background-image: url(img/1.jpg)"></div>
+		<div class="slideshow-image" style="background-image: url(img/2.jpg)"></div>
+		<div class="slideshow-image" style="background-image: url(img/3.jpg)"></div>
+		<div class="slideshow-image" style="background-image: url(img/4.jpg)"></div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var Api = "http://152.136.144.170:9901/" //测试
+	// var Api = "https://lexuexiu.com/" //正式
+	$(function(){
+		$("#login").click(function(){
+			var passVal = $('#password').val();
+			var pass = $.md5($.md5(passVal) + 'lexueshow');
+			if($('#username').val() == ''){
+				alert('账号不能为空')
+			}else if(pass == ''){
+				alert('密码不能为空')
+			}else{
+				$.ajax({ 
+					type: "get", 
+					url: Api + "organManager/login", 
+					data:{
+						userNm:$('#username').val(),
+						userPassword:pass,
+					},
+					dataType:"jsonp", 
+					jsonp:"callback", 
+					success:function(response){
+						console.log(response)
+						if(response.code == 1){
+							var id = response.data.organ.id
+							window.location.href="index.html?id=" + id;
+						}else if(response.code == 0){
+							alert(response.msg)
+						}
+					},
+					error:function(error){
+						
+					},
+				})
+			}
+		})
+	})
+	
+</script>
