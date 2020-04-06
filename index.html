@@ -4,292 +4,90 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>乐学秀管理系统</title>
-  <link rel="stylesheet" href="css/layui.css" id="layui">
-  <link rel="stylesheet" href="css/theme/default.css" id="theme">
-  <link rel="stylesheet" href="css/kitadmin.css" id="kitadmin">
-	<link rel="stylesheet" type="text/css" href="css/base.css"/>
-	<link rel="stylesheet" type="text/css" href="css/index.css"/>
-	<link rel="stylesheet" type="text/css" href="docs/index.css"/>
-	<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
-	<link href="dist/summernote.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/layui.css">
 </head>
-<body class="layui-layout-body kit-theme-default">
-  <div class="layui-layout layui-layout-admin">
-    <!-- header -->
-    <div class="layui-header">
-      <div class="layui-logo">
-        <div class="layui-logo-toggle" kit-toggle="side" data-toggle="on">
-          <i class="layui-icon">&#xe65a;</i>
-        </div>
-        <div class="layui-logo-brand">
-		  <img src="img/logo.png">
-          <span>乐学秀<span>
-        </div>
-      </div>
-      <div class="layui-layout-left">
-        <!-- <div class="kit-search">
-          <form action="/">
-            <input type="text" name="keyword" class="kit-search-input" placeholder="关键字..." />
-            <button class="kit-search-btn" title="搜索" type="submit">
-              <i class="layui-icon">&#xe615;</i>
-            </button>
-          </form>
-        </div> -->
-      </div>
-      <div class="layui-layout-right" style="height: 50px;">
-        <ul class="kit-nav" lay-filter="header_right">
-          <li class="kit-item">
-            <a href="javascript:;">
-              <p>
-                <img class="layui-nav-img">
-				<span class="organName"></span>
-              </p>
-            </a>
-            <ul class="kit-nav-child kit-nav-right">
-              <li class="kit-item">
-                <a href="#/user/my">
-                  <i class="layui-icon">&#xe612;</i>
-                  <span>个人中心</span>
-                </a>
-              </li>
-              <li class="kit-item" kit-target="setting">
-                <a href="javascript:;">
-                  <i class="layui-icon">&#xe614;</i>
-                  <span>设置</span>
-                </a>
-              </li>
-              <li class="kit-nav-line"></li>
-              <li class="kit-item">
-                <a href="temp/login.html">
-                  <i class="layui-icon">&#x1006;</i>
-                  <span>注销</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- silds -->
-    <div class="layui-side" kit-side="true">
-      <div class="layui-side-scroll">
-        <div id="menu-box">
-          <ul class="kit-menu">
-            <li class="kit-menu-item layui-show">
-              <a href="javascript:;">
-                <img src="img/logo.png">
-                <span class="ml5">日记管理</span>
-              </a>
-              <ul class="kit-menu-child layui-anim layui-anim-upbit colorfff" id="diaryModule">
-				<li class="kit-menu-item col009688">
-					<img src="img/logo.png">
-					<span>发日记</span>
-				</li>
-				<li class="kit-menu-item">
-					<img src="img/logo.png">
-					<span>日记列表</span>
-				</li>
-				<li class="kit-menu-item">
-					<img src="img/logo.png">
-					<span>发文章</span>
-				</li>
-				<li class="kit-menu-item">
-					<img src="img/logo.png">
-					<span>文章列表</span>
-				</li>
-              </ul>
-            </li>
-            <li class="kit-menu-item">
-              <a href="javascript:;">
-                <i class="layui-icon"></i>
-				<img src="img/logo.png">
-                <span>资料管理</span>
-              </a>
-              <ul class="kit-menu-child layui-anim layui-anim-upbit">
-                <li class="kit-menu-item">
-                  <a href="#/components/select">
-                    <span>修改资料</span>
-                  </a>
-                </li>
-				<li class="kit-menu-item">
-				  <a href="#/components/select">
-					<span>修改密码</span>
-				  </a>
-				</li>
-              </ul>
-            </li>
-            <li class="kit-menu-item">
-              <a href="javascript:;">
-				<img src="img/logo.png">
-                <span>统计功能</span>
-              </a>
-              <ul class="kit-menu-child layui-anim layui-anim-upbit">
-                <li class="kit-menu-item">
-                  <a href="#/exception/403">
-                    <span>课程动态</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- main -->
-    <div class="layui-body" kit-body="true">
-      <router-view></router-view>
-			<ul class="meBox">
-				<li class="publishDiary dis_biock">
-					<form action="" method="post" class="issueDiary margin_auto pl30 pt20">
-						<div class="">
-							<select class="ml20" id="diaryType">
-								<option value="1">美术</option>
-								<option value="2">书法</option>
-								<option value="3">音乐</option>
-								<option value="4">体育</option>
-								<option value="5">口才</option>
-							</select>
-						</div>
-						<div class="content mt20">
-							<textarea class="ml20" placeholder="日记内容" rows="" cols="" id="diaryContentTxt"></textarea>
-						</div>
-						<!-- <p class="mt20 imgs">图&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;片
-							<input class="ml20 uploadImg file" type="file" accept="image/*" />
-						</p> -->
-						<div class="flex mt20">
-							<p class="mt20 imgs">
-								<span class="ml20">图&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;片</span>
-								<div class="z_photo upimg-div flex fileDiaryImg">
-									<section class="z_file">
-										<img src="img/a11.png" class="add-img">
-										<input type="file" name="file" id="diaryFile" class="diaryFile" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
-									</section>
-								</div>
-							</p>
-						</div>
-						<p class="mt20 videos flex">
-							<span class="ml20">视&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;频</span>
-							<input class="ml20 uploadVideo file" type="file" accept="video/*" />
-						</p>
-						<input class="submit dis_biock mt20" type="button" id="publishDiary" value="发布" />
-					</form>
-				</li>
-				<li class="dis_none mt20">
-					<div class="">
-						<div class="diaryList" id="diaryList"></div>
-						<div id="demo1"></div>
-					</div>
-				</li>
-				<li class="publishDiary publishArticle dis_none">
-					<form action="" method="post" class="issueDiary margin_auto pl30 pt20">
-						<div class="">
-							<select id="selectTeacherList" name="channel">
-								<option value="null">选择老师</option>
-							</select>
-						</div>
-						<div class="mt20">
-							<select id="issueType">
-								<option value="1">美术</option>
-								<option value="2">书法</option>
-								<option value="3">音乐</option>
-								<option value="4">体育</option>
-								<option value="5">口才</option>
-							</select>
-						</div>
-						<div class="flex mt20 articImg">
-							<div class="articleImage pr">
-								<img class="dis_biock camera" src="img/camera%20.svg" >
-								<p class="tc f16">添加题图</p>
-								<section class="z_file">
-									<input type="file" name="file" id="articleFile" class="articleFile" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
-								</section>
-							</div>
-							<!-- <img class="articleImg" src="img/5.jpg" alt=""> -->
-						</div>
-						<input class="title mt10 articleTitle f30 w100" type="text" id="issueTitle" placeholder="请输入标题(最多50个字)" />
-						<div class="content mt10">
-							<!-- <div class="summernote" contenteditable="true" id='editBox'>请输入文章内容</div> -->
-							<!-- <script id="editor" type="text/plain" style="width:578px;height:300px;margin-left:25px;"></script> -->
-							<div class='content1'>
-								<header class='header flex'>
-									<select id='fontSize' defaultValue='3' class='font-size-box ml10'>
-										<option value="3">3号字</option>
-										<option value="1">1号字</option>
-										<option value="2">2号字</option>
-										<option value="4">4号字</option>
-										<option value="5">5号字</option>
-										<option value="6">6号字</option>
-										<option value="7">7号字</option>
-									</select>
-									<span class="ml10 mt10">字体颜色 :</span>
-									<input type="color" class="input-box mt10" id='fontColor' />
-									<div class="ry-upload mt5 ml10">
-										<p class="btn-inner">
-											+
-										</p>
-										<input type="file" name="file" id='file' accept="image/png,image/gif,image/jpeg,/image/jpg" class="btn-file" />
-									</div>
-									<div class="ry-upload mt5 ml10">
-										<p class="btn-inner">
-											<img src='img/timg.jpeg' height="20px" />
-										</p>
-										<input type="file" class="btn-file" accept="video/*" id='video' />
-									</div>
-								</header>
-								<div contenteditable="true" class='box' id='editBox'>
-									
-								</div>
-							</div>
-						</div>
-						<input class="submit dis_biock mt20" type="button" id="publishArticle" value="发布" />
-					</form>
-				</li>
-				<li class="dis_none mt20">
-					<div class="flex diaryHead bg2a3f54 articleHead colorfff">
-						<div><input type="checkbox" name="" id="" value="" /></div>
-						<div>Id</div>
-						<div>文章标题</div>
-						<div>文章内容</div>
-						<div>文章类型</div>
-						<div>浏览次数</div>
-						<div>收藏次数</div>
-						<div>点赞次数</div>
-						<div>创建时间</div>
-						<div>操作</div>
-					</div>
-					<div class="artileList"></div>
-					<div id="issueList"></div>
-				</li>
-			<ul>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">乐学秀管理系统</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item" id="userInfoLi">
+        <dl class="layui-nav-child">
+          <dd><a href="">基本资料</a></dd>
+          <dd><a href="">安全设置</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item"><a href="">退出</a></li>
+    </ul>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">主页</a>
+        </li>
+        <li class="layui-nav-item">
+          <a class="" href="javascript:;">日记管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="/views/diaryManagement/writeDiary.html">发日记</a></dd>
+            <dd><a href="/views/diaryManagement/diaryList.html">日记列表</a></dd>
+            <dd><a href="/views/diaryManagement/writeArticle.html">发文章</a></dd>
+            <dd><a href="/views/diaryManagement/articleList.html">文章列表</a></dd>
+            <dd><a href="/views/diaryManagement/questionTable.html">问题列表</a></dd>
+          </dl>
+        </li>
+        <!-- <li class="layui-nav-item">
+          <a href="javascript:;">解决方案</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">列表一</a></dd>
+            <dd><a href="javascript:;">列表二</a></dd>
+            <dd><a href="">超链接</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">云市场</a></li>
+        <li class="layui-nav-item"><a href="">发布商品</a></li> -->
+      </ul>
     </div>
   </div>
-	<aside class="mask works-mask">
-		<div class="mask-content">
-			<p class="del-p ">您确定要删除作品图片吗？</p>
-			<p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
-		</div>
-	</aside>
-  <script src="polyfill.min.js"></script>
-  <script src="layui.js"></script>
-  <script src="kitadmin.js"></script>
-  <!-- <script src="mockjs-config.js"></script> -->
-  <!-- <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.min.js"></script> -->
-  <script>layui.use("admin");</script>
-	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-	<script type="text/javascript" src="js/imgUp.js"></script>
-	<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-	<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
-	<script src="dist/summernote.js"></script>
-	<script src="dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
-</body>
-</html>
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <iframe id="iMain" src="/views/diaryManagement/test.html" style="width: 100%; height: 100%;"></iframe>
+  </div>
+  
+  <!-- <div class="layui-footer"> -->
+    <!-- 底部固定区域 -->
+    <!-- © layui.com - 底部固定区域 -->
+  <!-- </div> --> -->
+</div>
+<script src="layui.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
 <script>
-$(function(){
- $('.summernote').summernote({
-        height: 200,
-        tabsize: 2,
-        lang: 'zh-CN'
-    });
+
+  //获取用户信息
+var info = layui.sessionData('test');
+var userName = info.userInfo[0].userName;
+var userHead = info.userInfo[0].userHead;
+//JavaScript代码区域
+layui.use('element', function(){
+  var element = layui.element;
+  
+});
+
+$(document).ready(function(){
+	$("dd>a").click(function (e) {
+        e.preventDefault();
+        var ht = $(this).attr("href");
+        document.getElementById("iMain").src = ht;
+  });
+  
+  var tmpInfo = '<a href="javascript:;"><img src="'+userHead+'" class="layui-nav-img">'+userName+'</a>'
+  $('#userInfoLi').append(tmpInfo);
+  
 });
 </script>
+</body>
+</html>

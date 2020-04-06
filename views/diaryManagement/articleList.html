@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../../css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+ 
+<table class="layui-hide" lay-filter="test" id="test"></table>
+                    
+<script src="../../layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+
+<script>
+  //获取用户信息
+var info = layui.sessionData('test');
+var userId = info.userInfo[0].id;
+var userType = info.userInfo[0].userType;
+layui.use('table', function(){
+  var table = layui.table;
+  
+  table.render({
+    elem: '#test'
+    ,url:'http://152.136.144.170:9901/article/pcOwnDiaryList'
+    ,request: {
+        limitName: 'pageSize'
+    },
+    where: {
+        type: 1,
+        organ_id : userId,
+        user_type : userType
+    },
+    parseData: function(res) {
+        return {
+            "data": res.data.articleEntities,
+            "code" : res.code, //解析接口状态
+            "msg" : res.msg, //解析提示文本
+            "count": res.data.count
+        };
+    }
+    ,response: {
+        statusName:'code',
+        statusCode: "1" //规定成功的状态码，默认：0
+    } 
+    ,cols: [[
+      {type:'numbers', width:60, title: '序号', sort: true}
+      ,{field:'nickName', width:150, title: '标题'}
+      ,{field:'articleContent', width:560, title: '内容'}
+      ,{field:'contentType', title: '类型', width:80}
+      ,{field:'browseCount', width:110, title: '浏览次数', sort: true}
+      ,{field:'collectCount', width:110, title: '收藏次数', sort: true}
+      ,{field:'likeCount', width:110, title: '点赞次数', sort: true}
+      ,{field:'createDate', width:125, title: '发表时间', sort: true}
+    ]]
+    ,page: true
+  });
+
+  table.on('tool(test)', function(obj) {
+    console.log(obj.data.diaryId);
+    //页面层
+  });
+});
+
+</script>
+
+</body>
+</html>
