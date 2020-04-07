@@ -15,6 +15,7 @@
                     
 <script src="../../layui.js" charset="utf-8"></script>
 <script src="../../js/jquery-3.2.1.min.js"></script>
+<script src="../../js/ip.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
  
 <script>
@@ -27,7 +28,7 @@ layui.use('table', function(){
   
   table.render({
     elem: '#test'
-    ,url:'http://152.136.144.170:9901/article/pcOwnDiaryList'
+    ,url: Api + '/article/pcOwnDiaryList'
     ,request: {
         limitName: 'pageSize'
     },
@@ -50,7 +51,7 @@ layui.use('table', function(){
     } 
     ,cols: [[
       {type:'numbers', width:60, title: '序号', sort: true}
-      ,{field:'diaryContent', width:560, title: '内容'}
+      ,{field:'diaryDontent', width:560, title: '内容'}
       ,{field:'contentType', title: '类型', width:80}
       ,{field:'browseCount', width:110, title: '浏览次数', sort: true}
       ,{field:'collectCount', width:110, title: '收藏次数', sort: true}

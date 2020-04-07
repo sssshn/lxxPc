@@ -15,6 +15,7 @@
                     
 <script src="../../layui.js" charset="utf-8"></script>
 <script src="../../js/jquery-3.2.1.min.js"></script>
+<script src="../../js/ip.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
 
 <script>
@@ -27,7 +28,7 @@ layui.use('table', function(){
   
   table.render({
     elem: '#test'
-    ,url:'http://152.136.144.170:9901/article/pcOwnDiaryList'
+    ,url: Api + '/article/pcOwnDiaryList'
     ,request: {
         limitName: 'pageSize'
     },

@@ -64,6 +64,7 @@
     <script src="../../layui.js" charset="utf-8"></script>
     <script src="../../Content/ace/ace.js"></script>
     <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/ip.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
 //获取用户信息
@@ -80,7 +81,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   //普通图片上传
   var uploadInst = upload.render({
     elem: '#test1'
-    ,url: 'http://152.136.144.170:9901/upload/layUploadImage' //改成您自己的上传接口
+    ,url: Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,accept: 'images' //图片
     ,before: function(obj){
       //预读本地文件示例，不支持ie8
       obj.preview(function(index, file, result){
@@ -108,18 +110,17 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   layedit.set({
         //暴露layupload参数设置接口 --详细查看layupload参数说明
         uploadImage: {
-            url: 'http://127.0.0.1:9901/upload/layUploadImage',
+            url: Api + '/upload/layUploadImage',
             accept: 'image',
             acceptMime: 'image/*',
             exts: 'jpg|png|gif|bmp|jpeg',
             size: '10240'
         }
         , uploadVideo: {
-            url: 'http://127.0.0.1:9901/upload/layUploadVideo',
+            url:  Api + '/upload/layUploadVideo',
             accept: 'video',
             acceptMime: 'video/*',
-            exts: 'mp4|flv|avi|rm|rmvb',
-            size: '20480'
+            exts: 'mp4|flv|avi|rm|rmvb'
         }
         //右键删除图片/视频时的回调参数，post到后台删除服务器文件等操作，
         //传递参数：
@@ -162,7 +163,7 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   form.on('submit(demo1)', function(data){
     $.ajax({ 
         type:'post',   
-        url: 'http://152.136.144.170:9901/pcArticleManagement/pcWrite', 
+        url:  Api + '/pcArticleManagement/pcWrite', 
         data:{
             type : 1,
             contentType : data.field.interest,

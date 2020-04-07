@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="../../css/layui.css" rel="stylesheet" />
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+  
+ <style type="text/css">
+    .uploader-list {
+     margin-left: -15px;
+    }
+   
+    .uploader-list .info {
+     position: relative;
+     margin-top: -25px;
+     background-color: black;
+     color: white;
+     filter: alpha(Opacity=80);
+     -moz-opacity: 0.5;
+     opacity: 0.5;
+     width: 100px;
+     height: 25px;
+     text-align: center;
+     display: none;
+    }
+   
+    .uploader-list .handle {
+     position: relative;
+     background-color: black;
+     color: white;
+     filter: alpha(Opacity=80);
+     -moz-opacity: 0.5;
+     opacity: 0.5;
+     width: 100px;
+     text-align: right;
+     height: 18px;
+     margin-bottom: -18px;
+     display: none;
+    }
+   
+    .uploader-list .handle span {
+     margin-right: 5px;
+    }
+   
+    .uploader-list .handle span:hover {
+     cursor: pointer;
+    }
+   
+    .uploader-list .file-iteme {
+     margin: 12px 0 0 15px;
+     padding: 1px;
+     float: left;
+    }
+   </style>
+  
+</head>
+<body>
+    <form class="layui-form" action="" id="addGoodsForm">
+        
+        <div class="layui-form-item">
+          <label class="layui-form-label">日记类型</label>
+          <div class="layui-input-block">
+            <select name="interest" lay-filter="aihao">
+              <option value=""></option>
+              <option value="1" selected="">美术</option>
+              <option value="2">书法</option>
+              <option value="3">音乐</option>
+              <option value="4">体育</option>
+              <option value="5">口才</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test2">多图片上传</button> 
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
+                      预览图：
+                      <div class="layui-upload-list uploader-list" id="demo2" style="overflow: auto;"></div>
+                   </blockquote>
+                  </div> 
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">视频</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
+                    <div id="videoDemo"></div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">日记内容</label>
+            <div class="layui-input-block">
+              <textarea placeholder="请输入内容" name="diaryContent" class="layui-textarea"></textarea>
+            </div>
+          </div>
+
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+
+    <script src="../../layui.js" charset="utf-8"></script>
+    <script src="../../Content/ace/ace.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/ip.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+$(document).on("mouseenter mouseleave", ".file-iteme", function(event){
+   if(event.type === "mouseenter"){
+    //鼠标悬浮
+    $(this).children(".info").fadeIn("fast");
+    $(this).children(".handle").fadeIn("fast");
+   }else if(event.type === "mouseleave") {
+    //鼠标离开
+    $(this).children(".info").hide();
+    $(this).children(".handle").hide();
+   }
+});
+
+    // 删除图片
+$(document).on("click", ".file-iteme .handle", function(event){
+   $(this).parent().remove(); 
+});
+//获取用户信息
+var info = layui.sessionData('test');
+var userId = info.userInfo[0].id;
+var userType = info.userInfo[0].userType;
+layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate
+  ,upload = layui.upload;
+
+   //多图片上传
+   upload.render({
+    elem: '#test2'
+    ,url:  Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,multiple: true
+    ,accept: 'images' //图片
+    ,number: '9'
+    ,before: function(obj){
+      layer.msg('图片上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      })
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.close(layer.msg());
+      $('#demo2').append(
+        '<div id="" class="file-iteme">' +
+        '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+        '<img name="imageUrl" style="width: 100px;height: 100px;" src='+ res.data.src +'>' +
+        '</div>'
+      )
+    }
+  });
+
+//上传视频
+  upload.render({
+    elem: '#test5'
+    ,url: Api + '/upload/layUploadVideo' //改成您自己的上传接口
+    ,accept: 'video' //视频
+    ,before: function(obj){
+    $('#videoDemo').empty();
+      layer.msg('视频上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      })
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.close(layer.msg());
+      $('#videoDemo').append('<input name="videoUrl" value="'+res.data.src+'">'
+      +'<input type="hidden" name="videoImageUrl" value="'+res.data.videoImagePath+'">'
+      );
+    }
+  });
+  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+    var imageUrl = "";
+    var imgList = $("img[name='imageUrl']");
+    for(var i = 0; i < imgList.length; i++) {
+        if(imageUrl == "") {
+            imageUrl = imgList[i].src;
+        } else {
+            imageUrl = imageUrl + "," + imgList[i].src;
+        }
+    }
+    $.ajax({ 
+        type:'get',   
+        url: Api + '/article/pcWriteDiary', 
+        data:{
+            type : 2,
+            contentType : data.field.interest,
+            organId : userId,
+            //teacherId : 12,
+            browseType:'Y',
+            userType : userType,
+            diaryContent : data.field.diaryContent,
+            imageUrl : imageUrl,
+            videoUrl : data.field.videoUrl,
+            videoImgUrl : data.field.videoImageUrl
+        },
+        success:function(response){
+            if(response.code == 1){
+                //配置一个透明的询问框
+                layer.msg('发表成功啦！', {
+                    time: 3000, //3s后自动关闭
+                    btn: ['知道了']
+                });
+                $("#addGoodsForm")[0].reset();
+                layui.form.render();
+                $('#demo2').empty();
+                $('#videoDemo').empty();
+            }else{
+                //配置一个透明的询问框
+                layer.msg('发表失败！', {
+                    time: 3000, //20s后自动关闭
+                    btn: ['知道了']
+                });
+            }
+        },
+        error:function(error){
+            //配置一个透明的询问框
+            layer.msg('发表失败！请联系管理员', {
+                    time: 3000, //20s后自动关闭
+                    btn: ['知道了']
+                });
+        },
+    })
+    return false;
+    });
+});
+</script>
+</body>
+</html>
