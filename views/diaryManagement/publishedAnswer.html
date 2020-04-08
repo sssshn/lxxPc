@@ -34,8 +34,7 @@
                     url: Api + '/upload/layUploadVideo',
                     accept: 'video',
                     acceptMime: 'video/*',
-                    exts: 'mp4|flv|avi|rm|rmvb',
-                    size: '20480'
+                    exts: 'mp4|flv|avi|rm|rmvb'
                 }
                 //右键删除图片/视频时的回调参数，post到后台删除服务器文件等操作，
                 //传递参数：
@@ -69,7 +68,7 @@
                 parent.layer.close(index);
                 return false;
             });
-        })
+        });
 
         function getContent() {
             alert(layedit.getContent(ieditor));

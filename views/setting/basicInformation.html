@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../../css/layui.css"  media="all">
+  <link href="../../css/multiSelect.css">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+
+  <style type="text/css">
+    .uploader-list {
+     margin-left: -15px;
+    }
+   
+    .uploader-list .info {
+     position: relative;
+     margin-top: -25px;
+     background-color: black;
+     color: white;
+     filter: alpha(Opacity=80);
+     -moz-opacity: 0.5;
+     opacity: 0.5;
+     width: 100px;
+     height: 25px;
+     text-align: center;
+     display: none;
+    }
+   
+    .uploader-list .handle {
+     position: relative;
+     background-color: black;
+     color: white;
+     filter: alpha(Opacity=80);
+     -moz-opacity: 0.5;
+     opacity: 0.5;
+     width: 100px;
+     text-align: right;
+     height: 18px;
+     margin-bottom: -18px;
+     display: none;
+    }
+   
+    .uploader-list .handle span {
+     margin-right: 5px;
+    }
+   
+    .uploader-list .handle span:hover {
+     cursor: pointer;
+    }
+   
+    .uploader-list .file-iteme {
+     margin: 12px 0 0 15px;
+     padding: 1px;
+     float: left;
+    }
+   </style>
+</head>
+<body>
+        
+<form class="layui-form" action="" lay-filter="example">
+  <div class="layui-form-item">
+    <label class="layui-form-label">机构名称</label>
+    <div class="layui-input-block">
+      <input type="text" name="organName" lay-verify="title" autocomplete="off" placeholder="请输入机构名称" class="layui-input">
+    </div>
+  </div>
+  
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">机构简介</label>
+    <div class="layui-input-block">
+      <textarea placeholder="请输入机构简介" class="layui-textarea" name="organIntro"></textarea>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">联系人</label>
+    <div class="layui-input-block">
+      <input type="text" name="contactName" autocomplete="off" placeholder="请输入联系人名称" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">联系电话</label>
+    <div class="layui-input-block">
+      <input type="text" name="contactPhone" autocomplete="off" placeholder="请输入联系电话" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">所在地址</label>
+    <div class="layui-input-inline">
+      <select name="provinceId">
+        <option value="11" selected="">北京市</option>
+      </select>
+    </div>
+    <div class="layui-input-inline">
+      <select name="cityId">
+        <option value="1">北京市</option>
+      </select>
+    </div>
+    <div class="layui-input-inline">
+      <select name="districtId">
+        <option value="1">东城区</option>
+        <option value="2">西城区</option>
+        <option value="3">朝阳区</option>
+        <option value="4">丰台区</option>
+        <option value="5">海淀区</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">详细地址</label>
+    <div class="layui-input-block">
+      <input type="text" name="address"  autocomplete="off" placeholder="请输入详细地址" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">头像</label>
+    <div class="layui-input-block">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test1">上传头像</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="logPath" name="logPath" height="100" width="100">
+                <p id="demoText"></p>
+            </div>
+        </div>  
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">证书</label>
+    <div class="layui-input-block">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test2">上传证书图片</button> 
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
+            预览图：
+            <div class="layui-upload-list uploader-list" id="demo2" style="overflow: auto;"></div>
+        </blockquote>
+        </div> 
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">荣誉</label>
+    <div class="layui-input-block">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test3">上传荣誉图片</button> 
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
+            预览图：
+            <div class="layui-upload-list uploader-list" id="demo3" style="overflow: auto;"></div>
+        </blockquote>
+        </div> 
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">机构环境</label>
+    <div class="layui-input-block">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test4">上传机构环境图片</button> 
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
+            预览图：
+            <div class="layui-upload-list uploader-list" id="demo4" style="overflow: auto;"></div>
+        </blockquote>
+        </div> 
+    </div>
+  </div>
+ 
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+    </div>
+  </div>
+</form>
+          
+<script src="../../layui.js" charset="utf-8"></script>
+<script src="../../js/ip.js"></script>
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+//获取用户id
+var info = layui.sessionData('test');
+var userId = info.userInfo[0].id;
+var userType = info.userInfo[0].userType;
+var form;
+$(function(){
+    $.ajax({
+        url: Api + "/organManager/getOrganDetails?organId=" + userId,
+        type: "get",
+        success: function(res){
+            var data = JSON.parse(res.data);
+            for(var i = 0; i < data.certifPathArr.length; i++) {
+                $('#demo2').append(
+                    '<div id="" class="file-iteme">' +
+                    '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                    '<img name="certifPath" id="certifPath" style="width: 100px;height: 100px;" src='+ data.certifPathArr[i] +'>' +
+                    '</div>'
+                )
+            }
+            for(var i = 0; i < data.honorPathArr.length; i++) {
+                $('#demo3').append(
+                    '<div id="" class="file-iteme">' +
+                    '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                    '<img name="honorPath" id="honorPath" style="width: 100px;height: 100px;" src='+ data.honorPathArr[i] +'>' +
+                    '</div>'
+                )
+            }
+            for(var i = 0; i < data.organPathArr.length; i++) {
+                $('#demo4').append(
+                    '<div id="" class="file-iteme">' +
+                    '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                    '<img name="organPath" id="organPath" style="width: 100px;height: 100px;" src='+ data.organPathArr[i] +'>' +
+                    '</div>'
+                )
+            }
+            $("#logPath").attr("src", data.logPath);
+            form.val('example', {
+                "organName": data.organNm
+                ,"address": data.address
+                ,"organIntro": data.organIntro
+                ,"contactName": data.contactNm
+                ,"contactPhone": data.contactPhone
+                ,"provinceId": data.provinceId
+                ,"cityId": data.cityId
+                ,"districtId": data.districtId
+            });
+        }
+    });
+});
+
+$(document).on("mouseenter mouseleave", ".file-iteme", function(event){
+   if(event.type === "mouseenter"){
+    //鼠标悬浮
+    $(this).children(".info").fadeIn("fast");
+    $(this).children(".handle").fadeIn("fast");
+   }else if(event.type === "mouseleave") {
+    //鼠标离开
+    $(this).children(".info").hide();
+    $(this).children(".handle").hide();
+   }
+});
+
+// 删除预览图片
+$(document).on("click", ".file-iteme .handle", function(event){
+   $(this).parent().remove(); 
+});
+
+layui.use(['form', 'upload'], function(){
+  form = layui.form
+  var layer = layui.layer
+  ,upload = layui.upload;
+
+  //头像上传
+  var uploadInst = upload.render({
+    elem: '#test1'
+    ,url: Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,accept: 'images' //图片
+    ,before: function(obj){
+      
+    }
+    ,done: function(res){
+      //如果上传失败
+      if(res.code > 0){
+        return layer.msg('上传失败');
+      } else {
+        //上传成功
+        $('#logPath').attr('src', res.data.src);
+        layer.msg('上传头像成功！');
+      }
+      
+    }
+    ,error: function(){
+      //演示失败状态，并实现重传
+      var demoText = $('#demoText');
+      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+      demoText.find('.demo-reload').on('click', function(){
+        uploadInst.upload();
+      });
+    }
+  });
+
+  //证书图片上传
+  upload.render({
+    elem: '#test2'
+    ,url:  Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,multiple: true
+    ,accept: 'images' //图片
+    ,number: '9'
+    ,before: function(obj){
+      layer.msg('图片上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      })
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.close(layer.msg());
+      $('#demo2').append(
+        '<div id="" class="file-iteme">' +
+        '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+        '<img name="certifPath" id="certifPath" style="width: 100px;height: 100px;" src='+ res.data.src +'>' +
+        '</div>'
+      )
+    }
+  });
+
+  //荣誉图片上传
+  upload.render({
+    elem: '#test3'
+    ,url:  Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,multiple: true
+    ,accept: 'images' //图片
+    ,number: '9'
+    ,before: function(obj){
+      layer.msg('图片上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      })
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.close(layer.msg());
+      $('#demo3').append(
+        '<div id="" class="file-iteme">' +
+        '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+        '<img name="honorPath" id="honorPath" style="width: 100px;height: 100px;" src='+ res.data.src +'>' +
+        '</div>'
+      )
+    }
+  });
+
+  //机构环境图片上传
+  upload.render({
+    elem: '#test4'
+    ,url:  Api + '/upload/layUploadImage' //改成您自己的上传接口
+    ,multiple: true
+    ,accept: 'images' //图片
+    ,number: '9'
+    ,before: function(obj){
+      layer.msg('图片上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      })
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.close(layer.msg());
+      $('#demo4').append(
+        '<div id="" class="file-iteme">' +
+        '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+        '<img name="organPath" id="organPath" style="width: 100px;height: 100px;" src='+ res.data.src +'>' +
+        '</div>'
+      )
+    }
+  });
+  
+
+  //自定义验证规则
+  form.verify({
+    title: function(value){
+      if(value.length <= 0){
+        return '机构名称不能为空啊';
+      }
+    }
+  });
+  
+  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+    var certifPath = "";
+    var certifPathList = $("#certifPath");
+    for(var i = 0; i < certifPathList.length; i++) {
+        if(certifPath == "") {
+            certifPath = certifPathList[i].src;
+        } else {
+            certifPath = certifPath + "," + certifPathList[i].src;
+        }
+    }
+    var honorPath = "";
+    var honorPathList = $("#honorPath");
+    for(var i = 0; i < honorPathList.length; i++) {
+        if(honorPath == "") {
+            honorPath = honorPathList[i].src;
+        } else {
+            honorPath = honorPath + "," + honorPathList[i].src;
+        }
+    }
+    var organPath = "";
+    var organPathList = $("#organPath");
+    for(var i = 0; i < organPathList.length; i++) {
+        if(organPath == "") {
+            organPath = organPathList[i].src;
+        } else {
+            organPath = organPath + "," + organPathList[i].src;
+        }
+    }
+    $.ajax({ 
+        type:'POST',   
+        url: Api + '/organManager/completionData', 
+        data:{
+            organId : userId,
+			organName : data.field.organName,
+			address : data.field.address,
+			//organType : text.join(','),
+			organIntro : data.field.organIntro,
+			contactName : data.field.contactName,
+            contactPhone : data.field.contactPhone,
+            provinceId : data.field.provinceId,
+            cityId : data.field.cityId,
+            districtId : data.field.districtId,
+			logPath : $("#logPath")[0].src,
+			certifPath : certifPath,
+			organPath : organPath,
+			honorPath : honorPath
+        },
+        success:function(response){
+            if(response.code == 1){
+                //配置一个透明的询问框
+                layer.msg('修改资料成功啦！某些信息可能需要您重新登录才会变化。', {
+                    time: 5000, //3s后自动关闭
+                    btn: ['知道了']
+                });
+            }else{
+                //配置一个透明的询问框
+                layer.msg('修改资料失败！', {
+                    time: 5000, //3s后自动关闭
+                    btn: ['知道了']
+                });
+            }
+        },
+        error:function(error){
+            //配置一个透明的询问框
+            layer.msg('修改资料失败！请联系管理员', {
+                    time: 5000, //3s后自动关闭
+                    btn: ['知道了']
+                });
+        },
+    })
+    return false;
+  });
+});
+</script>
+
+</body>
+</html>
