@@ -38,9 +38,8 @@
                 <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test1">上传图片</button>
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" id="demo1" height="200" width="200">
+                        <img class="layui-upload-img" id="imageUrl" height="200" width="200">
                         <p id="demoText"></p>
-                        <input type="hidden" id="imagePath" lay-verify="imageAdress">
                     </div>
                 </div>  
             </div>
@@ -83,19 +82,15 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
     elem: '#test1'
     ,url: Api + '/upload/layUploadImage' //改成您自己的上传接口
     ,accept: 'images' //图片
-    ,before: function(obj){
-      //预读本地文件示例，不支持ie8
-      obj.preview(function(index, file, result){
-        $('#demo1').attr('src', result); //图片链接（base64）
-      });
-    }
     ,done: function(res){
       //如果上传失败
       if(res.code > 0){
         return layer.msg('上传失败');
+      } else {
+        //上传成功
+        $('#imageUrl').attr('src', res.data.src);
+        layer.msg('上传头像成功！');
       }
-      //上传成功
-      $('#imagePath').attr('value', res.data.src);
     }
     ,error: function(){
       //演示失败状态，并实现重传
@@ -150,8 +145,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   //自定义验证规则
   form.verify({
     title: function(value){
-      if(value.length < 5){
-        return '标题至少得5个字符啊';
+      if(value.length <= 0){
+        return '文章标题不能为空！';
       }
     }
     ,content: function(value){
@@ -173,7 +168,7 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
             userType : userType,
             title : data.field.title,
             articleContent : data.field.content,
-            imageUrl : $('#imagePath').val()
+            imageUrl : $('#imageUrl')[0].src
         },
         success:function(response){
             if(response.code == 1){
@@ -184,6 +179,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
                 });
                 $("#addGoodsForm")[0].reset();
                 layui.form.render();
+                $('#imageUrl')[0].attr("src","");
+                
             }else{
                 //配置一个透明的询问框
                 layer.msg('发表失败！', {
