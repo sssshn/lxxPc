@@ -63,45 +63,45 @@
   <div class="layui-form-item">
     <label class="layui-form-label">机构名称</label>
     <div class="layui-input-block">
-      <input type="text" name="organName" lay-verify="title" autocomplete="off" placeholder="请输入机构名称" class="layui-input">
+      <input type="text" name="organName" id="organName" lay-verify="title" autocomplete="off" placeholder="请输入机构名称" class="layui-input">
     </div>
   </div>
   
   <div class="layui-form-item layui-form-text">
     <label class="layui-form-label">机构简介</label>
     <div class="layui-input-block">
-      <textarea placeholder="请输入机构简介" class="layui-textarea" name="organIntro"></textarea>
+      <textarea placeholder="请输入机构简介" class="layui-textarea" id="organIntro" name="organIntro"></textarea>
     </div>
   </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">联系人</label>
     <div class="layui-input-block">
-      <input type="text" name="contactName" autocomplete="off" placeholder="请输入联系人名称" class="layui-input">
+      <input type="text" id="contactName" name="contactName" autocomplete="off" placeholder="请输入联系人名称" class="layui-input">
     </div>
   </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">联系电话</label>
     <div class="layui-input-block">
-      <input type="text" name="contactPhone" autocomplete="off" placeholder="请输入联系电话" class="layui-input">
+      <input type="text" id="contactPhone" name="contactPhone" autocomplete="off" placeholder="请输入联系电话" class="layui-input">
     </div>
   </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">所在地址</label>
     <div class="layui-input-inline">
-      <select name="provinceId">
+      <select id="provinceId" name="provinceId">
         <option value="11" selected="">北京市</option>
       </select>
     </div>
     <div class="layui-input-inline">
-      <select name="cityId">
+      <select id="cityId" name="cityId">
         <option value="1">北京市</option>
       </select>
     </div>
     <div class="layui-input-inline">
-      <select name="districtId">
+      <select id="districtId" name="districtId">
         <option value="1">东城区</option>
         <option value="2">西城区</option>
         <option value="3">朝阳区</option>
@@ -114,7 +114,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label">详细地址</label>
     <div class="layui-input-block">
-      <input type="text" name="address"  autocomplete="off" placeholder="请输入详细地址" class="layui-input">
+      <input type="text" name="address" id="address"  autocomplete="off" placeholder="请输入详细地址" class="layui-input">
     </div>
   </div>
 
@@ -186,13 +186,21 @@
 var info = layui.sessionData('test');
 var userId = info.userInfo[0].id;
 var userType = info.userInfo[0].userType;
-var form;
 $(function(){
     $.ajax({
         url: Api + "/organManager/getOrganDetails?organId=" + userId,
         type: "get",
         success: function(res){
             var data = JSON.parse(res.data);
+            $("#organName").attr("value", data.organNm);
+            $("#address").attr("value", data.address);
+            $("#contactName").attr("value", data.contactNm);
+            $("#contactPhone").attr("value", data.contactPhone);
+            $("#organIntro").val(data.organIntro);
+            $("#provinceId").val(data.provinceId);
+            $("#cityId").val(data.cityId);
+            $("#districtId").val(data.districtId);
+            $("#logPath").attr("src", data.logPath);
             for(var i = 0; i < data.certifPathArr.length; i++) {
                 $('#demo2').append(
                     '<div id="" class="file-iteme">' +
@@ -217,18 +225,7 @@ $(function(){
                     '</div>'
                 )
             }
-            $("#logPath").attr("src", data.logPath);
-            form.val('example', {
-                "organName": data.organNm
-                ,"address": data.address
-                ,"organIntro": data.organIntro
-                ,"contactName": data.contactNm
-                ,"contactPhone": data.contactPhone
-                ,"provinceId": data.provinceId
-                ,"cityId": data.cityId
-                ,"districtId": data.districtId
-            });
-        }
+         }
     });
 });
 
@@ -250,8 +247,8 @@ $(document).on("click", ".file-iteme .handle", function(event){
 });
 
 layui.use(['form', 'upload'], function(){
-  form = layui.form
-  var layer = layui.layer
+  var form = layui.form
+  ,layer = layui.layer
   ,upload = layui.upload;
 
   //头像上传

@@ -57,16 +57,47 @@ layui.use('table', function(){
       ,{field:'collectCount', width:110, title: '收藏次数', sort: true}
       ,{field:'likeCount', width:110, title: '点赞次数', sort: true}
       ,{field:'createDate', width:125, title: '发表时间', sort: true}
+      ,{field:'', width:60, title: '操作', toolbar: '#bar'}
     ]]
     ,page: true
   });
 
   table.on('tool(test)', function(obj) {
-    console.log(obj.data.diaryId);
-    //页面层
+    layer.confirm('确认删除么', function(index) {
+      $.ajax({ 
+            type: "GET", 
+            url: Api + "/pcArticleManagement/deleteDiary", 
+            data:{
+              diaryId : obj.data.diaryId
+            },
+            success:function(res){
+              if(res.code == 1) {
+                layer.msg('删除成功！');
+                //执行重载
+                table.reload('test', {
+                  page: {
+                    curr: 1 //重新从第 1 页开始
+                  }
+                  ,where: {
+                    type: 1,
+                    organ_id : userId,
+                    user_type : userType
+                  }
+                });
+              } else {
+                layer.msg('删除失败！请联系管理员');
+              }
+            },
+            error:function(error){
+              layer.msg('删除失败！请联系管理员');
+            }
+      })
+    });
   });
 });
-
+</script>
+<script type="text/html" id="bar">
+  <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
 </script>
 
 </body>

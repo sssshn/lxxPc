@@ -32,11 +32,11 @@
           </div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">上传题图</label>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传首图</label>
             <div class="layui-input-block">
                 <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <button type="button" class="layui-btn" id="test1">选择图片</button>
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" id="imageUrl" height="200" width="200">
                         <p id="demoText"></p>
@@ -44,6 +44,16 @@
                 </div>  
             </div>
         </div>
+
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label">视频</label>
+          <div class="layui-input-block">
+              <div class="layui-upload">
+                  <button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
+                  <div id="videoDemo"></div>
+              </div> 
+          </div>
+      </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
@@ -101,6 +111,23 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
       });
     }
   });
+
+  //上传视频
+  upload.render({
+    elem: '#test5'
+    ,url: Api + '/upload/layUploadVideo' //改成您自己的上传接口
+    ,accept: 'video' //视频
+    ,before: function(obj){
+      $('#videoDemo').empty();
+    }
+    ,done: function(res){
+      //上传完毕
+      layer.msg("上传视频成功！");
+      $('#videoDemo').append('<input name="videoUrl" value="'+res.data.src+'">'
+      +'<input type="hidden" name="videoImageUrl" value="'+res.data.videoImagePath+'">'
+      );
+    }
+  });
   
   layedit.set({
         //暴露layupload参数设置接口 --详细查看layupload参数说明
@@ -133,8 +160,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
         }
         , tool: [
             'html', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
-            , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'video', 'anchors'
-            //, '|', 'fullScreen'
+            , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', /*'video',*/ 'anchors'
+            , '|', 'fullScreen'
         ]
         , height: '90%'
     });
@@ -156,6 +183,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   
   //监听提交
   form.on('submit(demo1)', function(data){
+    $("#layeditDemo").contents().find('body').html('');
+    return false;
     $.ajax({ 
         type:'post',   
         url:  Api + '/pcArticleManagement/pcWrite', 
@@ -168,7 +197,9 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
             userType : userType,
             title : data.field.title,
             articleContent : data.field.content,
-            imageUrl : $('#imageUrl')[0].src
+            imageUrl : $('#imageUrl')[0].src,
+            videoImgUrl : data.field.videoImageUrl,
+            videoUrl : data.field.videoUrl
         },
         success:function(response){
             if(response.code == 1){
@@ -179,8 +210,9 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
                 });
                 $("#addGoodsForm")[0].reset();
                 layui.form.render();
-                $('#imageUrl')[0].attr("src","");
-                
+                $('#imageUrl').attr("src","");
+                $('#videoDemo').empty();
+                $("#layeditDemo").contents().find('body').html('');
             }else{
                 //配置一个透明的询问框
                 layer.msg('发表失败！', {
