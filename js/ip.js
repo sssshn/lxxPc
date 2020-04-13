@@ -1,1 +1,2 @@
-var Api = "http://152.136.144.170:9901" //测试
+//var Api = "https://lexuexiu.com/zlzl" //正式
+var Api = "https://plus.lexuexiu.com" //正式

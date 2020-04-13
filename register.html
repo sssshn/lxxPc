@@ -64,7 +64,7 @@
 			if($('#affirmPass').val() == $('#password').val()){
 				$.ajax({ 
 					type:'POST',   
-					url: Api + "organManager/orgRegister", 
+					url: Api + "/organManager/orgRegister", 
 					data:{
 						userNm : $('#username').val(),
 						organNm : $('#organName').val(),

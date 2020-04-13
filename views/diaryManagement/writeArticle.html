@@ -119,13 +119,19 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
     ,accept: 'video' //视频
     ,before: function(obj){
       $('#videoDemo').empty();
+      layer.msg('视频上传中...', {
+          icon : 16,
+          shade : 0.01,
+          time : 0
+      });
     }
     ,done: function(res){
       //上传完毕
-      layer.msg("上传视频成功！");
+      layer.close(layer.msg());
       $('#videoDemo').append('<input name="videoUrl" value="'+res.data.src+'">'
       +'<input type="hidden" name="videoImageUrl" value="'+res.data.videoImagePath+'">'
       );
+      layer.msg("上传视频成功！");
     }
   });
   
@@ -183,8 +189,8 @@ layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
   
   //监听提交
   form.on('submit(demo1)', function(data){
-    $("#layeditDemo").contents().find('body').html('');
-    return false;
+    // $("#layeditDemo").contents().find('body').html('');
+    // return false;
     $.ajax({ 
         type:'post',   
         url:  Api + '/pcArticleManagement/pcWrite', 
