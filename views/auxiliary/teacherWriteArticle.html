@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../../Content/Layui-KnifeZ/css/layui.css" rel="stylesheet" />
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+
+<body>
+    <form class="layui-form" action="" id="addGoodsForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">老师</label>
+            <div class="layui-input-block">
+                <select name="teacherId" id="teacherId" lay-verify="required" lay-reqText="您还没有选择老师！">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" lay-verify="required" lay-reqText="您还没有写标题！"
+                    class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="aihao">
+                    <option value="3" selected="">音乐</option>
+                    <!-- <option value="2">书法</option>
+          <option value="3">音乐</option>
+          <option value="4">体育</option>
+          <option value="5">口才</option> -->
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传首图</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">选择图片</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="imageUrl" height="200" width="200">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">视频</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
+                    <div id="videoDemo"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="content" lay-verify="content"
+                    id="layeditDemo"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="../../layui.js" charset="utf-8"></script>
+    <script src="../../Content/ace/ace.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/ip.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+    <script>
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: Api + '/pcArticleManagement/queryVirtualTeacher',
+                success: function (response) {
+                    for (var i = 0; i < response.data.length; i++) {
+                        $("#teacherId").append("<option value='" + response.data[i].teacherId + "'>" + response.data[i].teacherNm + "</option>");//新增
+                    }
+                    layui.form.render('select');
+                }, error: function () {
+                    alertLayer("获取数据失败", "error");
+                }
+            });
+        });
+        layui.use(['form', 'layedit', 'laydate', 'upload'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate
+                , upload = layui.upload;
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                , url: Api + '/upload/layUploadImage' //改成您自己的上传接口
+                , accept: 'images' //图片
+                , done: function (res) {
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    } else {
+                        //上传成功
+                        $('#imageUrl').attr('src', res.data.src);
+                        layer.msg('上传头像成功！');
+                    }
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+            //上传视频
+            upload.render({
+                elem: '#test5'
+                , url: Api + '/upload/layUploadVideo' //改成您自己的上传接口
+                , accept: 'video' //视频
+                , before: function (obj) {
+                    $('#videoDemo').empty();
+                    layer.msg('视频上传中...', {
+                        icon: 16,
+                        shade: 0.01,
+                        time: 0
+                    });
+                }
+                , done: function (res) {
+                    //上传完毕
+                    layer.close(layer.msg());
+                    $('#videoDemo').append('<input name="videoUrl" value="' + res.data.src + '">'
+                        + '<input type="hidden" name="videoImageUrl" value="' + res.data.videoImagePath + '">'
+                    );
+                    layer.msg("上传视频成功！");
+                }
+            });
+
+            layedit.set({
+                //暴露layupload参数设置接口 --详细查看layupload参数说明
+                uploadImage: {
+                    url: Api + '/upload/layUploadImage',
+                    accept: 'image',
+                    acceptMime: 'image/*',
+                    exts: 'jpg|png|gif|bmp|jpeg',
+                    size: '10240'
+                }
+                , uploadVideo: {
+                    url: Api + '/upload/layUploadVideo',
+                    accept: 'video',
+                    acceptMime: 'video/*',
+                    exts: 'mp4|flv|avi|rm|rmvb'
+                }
+                //右键删除图片/视频时的回调参数，post到后台删除服务器文件等操作，
+                //传递参数：
+                //图片： imgpath --图片路径
+                //视频： filepath --视频路径 imgpath --封面路径
+                , calldel: {
+                    url: '/Attachment/DeleteFile'
+                }
+                //开发者模式 --默认为false
+                , devmode: true
+                //插入代码设置
+                , codeConfig: {
+                    hide: true,  //是否显示编码语言选择框
+                    default: 'javascript' //hide为true时的默认语言格式
+                }
+                , tool: [
+                    'html', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                    , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', /*'video',*/ 'anchors'
+                    , '|', 'fullScreen'
+                ]
+                , height: '90%'
+            });
+            ieditor = layedit.build('layeditDemo', {
+                height: 450
+            });
+
+            //自定义验证规则
+            form.verify({
+                content: function (value) {
+                    layedit.sync(ieditor);
+                }
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                // $("#layeditDemo").contents().find('body').html('');
+                //return false;
+                $.ajax({
+                    type: 'post',
+                    url: Api + '/pcArticleManagement/pcWrite',
+                    data: {
+                        type: 1,
+                        contentType: data.field.interest,
+                        teacherId: data.field.teacherId,
+                        browseType: 'Y',
+                        userType: 2,
+                        title: data.field.title,
+                        articleContent: data.field.content,
+                        imageUrl: $('#imageUrl')[0].src,
+                        videoImgUrl: data.field.videoImageUrl == null ? "" : data.field.videoImageUrl,
+                        videoUrl: data.field.videoUrl == null ? "" : data.field.videoUrl
+                    },
+                    success: function (response) {
+                        if (response.code == 1) {
+                            //配置一个透明的询问框
+                            layer.msg('发表成功啦！', {
+                                time: 3000, //20s后自动关闭
+                                btn: ['知道了']
+                            });
+                            $("#addGoodsForm")[0].reset();
+                            layui.form.render();
+                            $('#imageUrl').attr("src", "");
+                            $('#videoDemo').empty();
+                            $("#layeditDemo").contents().find('body').html('');
+                        } else {
+                            //配置一个透明的询问框
+                            layer.msg('发表失败！', {
+                                time: 3000, //20s后自动关闭
+                                btn: ['知道了']
+                            });
+                        }
+                    },
+                    error: function (error) {
+                    },
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

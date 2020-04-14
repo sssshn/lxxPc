@@ -15,12 +15,11 @@
         </div>
     </form>
     <script>
-        var layedit;
         var ieditor;
         layui.use(['layedit', 'layer', 'jquery', 'form'], function () {
-            var $ = layui.jquery;
-            layedit = layui.layedit;
-            var form = layui.form;
+            var $ = layui.jquery,
+            layedit = layui.layedit,
+            form = layui.form;
             layedit.set({
                 //暴露layupload参数设置接口 --详细查看layupload参数说明
                 uploadImage: {
@@ -51,7 +50,7 @@
                     default: 'javascript' //hide为true时的默认语言格式
                 }
                 , tool: [
-                    'html', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                    /*'html',*/ 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
                     , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'video', 'anchors'
                     //, '|', 'fullScreen'
                 ]
@@ -60,18 +59,11 @@
             ieditor = layedit.build('layeditDemo',{
                 height: 450
             });
-
-            //监听提交
-            form.on('submit(demo1)', function(data){
-                console.log(layedit.getContent(ieditor));
-                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-                parent.layer.close(index);
-                return false;
-            });
         });
 
-        function getContent() {
-            alert(layedit.getContent(ieditor));
+        //想父页面返回数据
+        var callbackdata =  function () {
+            return layui.layedit.getContent(ieditor)
         }
     </script>
 </body>

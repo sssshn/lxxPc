@@ -1,96 +1,111 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>乐学秀管理系统</title>
   <link rel="stylesheet" href="css/layui.css">
 </head>
+
 <body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
-  <div class="layui-header">
-    <div class="layui-logo">乐学秀管理系统</div>
-    <!-- 头部区域（可配合layui已有的水平导航） -->
-    <ul class="layui-nav layui-layout-right">
-      <li class="layui-nav-item" id="userInfoLi">
-        <dl class="layui-nav-child">
-          <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
-          <dd><a href="">修改密码</a></dd>
-        </dl>
-      </li>
-      <li class="layui-nav-item"><a href="">退出</a></li>
-    </ul>
-  </div>
-  
-  <div class="layui-side layui-bg-black">
-    <div class="layui-side-scroll">
-      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-        <li class="layui-nav-item">
-          <a class="" href="javascript:;"><i class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主页</a>
-        </li>
-        <li class="layui-nav-item">
-          <a class="" href="javascript:;"><i class="layui-icon layui-icon-template"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日记管理</a>
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+      <div class="layui-logo">乐学秀管理系统</div>
+      <!-- 头部区域（可配合layui已有的水平导航） -->
+      <ul class="layui-nav layui-layout-right">
+        <li class="layui-nav-item" id="userInfoLi">
           <dl class="layui-nav-child">
-            <dd><a href="/views/diaryManagement/writeDiary.html">发日记</a></dd>
-            <dd><a href="/views/diaryManagement/diaryList.html">日记列表</a></dd>
-            <dd><a href="/views/diaryManagement/writeArticle.html">发文章</a></dd>
-            <dd><a href="/views/diaryManagement/articleList.html">文章列表</a></dd>
-            <dd><a href="/views/diaryManagement/questionTable.html">问题列表</a></dd>
+            <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
+            <dd><a href="">修改密码</a></dd>
           </dl>
         </li>
-        <li class="layui-nav-item">
-          <a href="javascript:;"><i class="layui-icon layui-icon-set"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设置</a>
-          <dl class="layui-nav-child">
-            <dd>
-              <a href="javascript:;">我的设置</a>
-              <dl class="layui-nav-child">
-                <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
-                <dd><a href="/views/setting/createTeacher.html">创建老师</a></dd>
-                <dd><a href="/views/setting/changePassword.html">修改密码</a></dd>
-              </dl>
-            </dd>
-          </dl>
-        </li>
+        <li class="layui-nav-item"><a href="">退出</a></li>
       </ul>
     </div>
-  </div>
-  
-  <div class="layui-body">
-    <!-- 内容主体区域 -->
-    <iframe id="iMain" frameborder="0" class="layadmin-iframe" src="/views/diaryManagement/test.html" style="width: 100%; height: 100%;"></iframe>
-  </div>
-  
-  <!-- <div class="layui-footer"> -->
+
+    <div class="layui-side layui-bg-black">
+      <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+          <li class="layui-nav-item">
+            <a class="" href="javascript:;"><i
+                class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主页</a>
+          </li>
+          <li class="layui-nav-item">
+            <a class="" href="javascript:;"><i
+                class="layui-icon layui-icon-template"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日记管理</a>
+            <dl class="layui-nav-child">
+              <dd><a href="/views/diaryManagement/writeDiary.html">发日记</a></dd>
+              <dd><a href="/views/diaryManagement/diaryList.html">日记列表</a></dd>
+              <dd><a href="/views/diaryManagement/writeArticle.html">发文章</a></dd>
+              <dd><a href="/views/diaryManagement/articleList.html">文章列表</a></dd>
+              <dd><a href="/views/diaryManagement/questionTable.html">问题列表</a></dd>
+            </dl>
+          </li>
+          <li class="layui-nav-item">
+            <a class="" href="javascript:;"><i
+                class="layui-icon layui-icon-app"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辅助功能</a>
+            <dl class="layui-nav-child">
+              <!-- <dd><a href="/views/setting/createTeacher.html">老师列表</a></dd> -->
+              <dd><a href="/views/auxiliary/createTeacher.html">创建老师</a></dd>
+              <dd><a href="/views/auxiliary/teacherWriteArticle.html">老师发文章</a></dd>
+              <dd><a href="/views/auxiliary/teacherWriteDiary.html">老师发日记</a></dd>
+            </dl>
+          </li>
+          <li class="layui-nav-item">
+            <a href="javascript:;"><i class="layui-icon layui-icon-set"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设置</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="javascript:;">我的设置</a>
+                <dl class="layui-nav-child">
+                  <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
+                  <dd><a href="/views/setting/changePassword.html">修改密码</a></dd>
+                </dl>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="layui-body">
+      <!-- 内容主体区域 -->
+      <iframe id="iMain" frameborder="0" class="layadmin-iframe" src="/views/diaryManagement/test.html"
+        style="width: 100%; height: 100%;"></iframe>
+    </div>
+
+    <!-- <div class="layui-footer"> -->
     <!-- 底部固定区域 -->
     <!-- © layui.com - 底部固定区域 -->
-  <!-- </div> --> -->
-</div>
-<script src="layui.js"></script>
-<script src="js/jquery-3.2.1.min.js"></script>
-<script>
+    <!-- </div> --> -->
+  </div>
+  <script src="layui.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script>
 
-  //获取用户信息
-var info = layui.sessionData('test');
-var userName = info.userInfo[0].userName;
-var userHead = info.userInfo[0].userHead;
-//JavaScript代码区域
-layui.use('element', function(){
-  var element = layui.element;
-  
-});
+    //获取用户信息
+    var info = layui.sessionData('test');
+    var userName = info.userInfo[0].userName;
+    var userHead = info.userInfo[0].userHead;
+    //JavaScript代码区域
+    layui.use('element', function () {
+      var element = layui.element;
 
-$(document).ready(function(){
-	$("dd>a").click(function (e) {
+    });
+
+    $(document).ready(function () {
+      $("dd>a").click(function (e) {
         e.preventDefault();
         var ht = $(this).attr("href");
         document.getElementById("iMain").src = ht;
-  });
-  
-  var tmpInfo = '<a href="javascript:;"><img src="'+userHead+'" class="layui-nav-img">'+userName+'</a>'
-  $('#userInfoLi').append(tmpInfo);
-  
-});
-</script>
+      });
+
+      var tmpInfo = '<a href="javascript:;"><img src="' + userHead + '" class="layui-nav-img">' + userName + '</a>'
+      $('#userInfoLi').append(tmpInfo);
+
+    });
+  </script>
 </body>
+
 </html>

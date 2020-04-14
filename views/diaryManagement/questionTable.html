@@ -1,93 +1,123 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Layui</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="../../css/layui.css"  media="all">
+  <link rel="stylesheet" href="../../css/layui.css" media="all">
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
+
 <body>
- 
-<table class="layui-hide" lay-filter="test" id="test"></table>
-                    
-<script src="../../layui.js" charset="utf-8"></script>
-<script src="../../js/jquery-3.2.1.min.js"></script>
-<script src="../../js/ip.js"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
- 
-<script>
-  //获取用户信息
-var info = layui.sessionData('test');
-var userId = info.userInfo[0].id;
-var userType = info.userInfo[0].userType;
-layui.use('table', function(){
-  var table = layui.table;
-  
-  table.render({
-    elem: '#test'
-    ,url : Api + '/pcArticleManagement/pcOwnDiaryList'
-    ,request: {
-        limitName: 'pageSize'
-    },
-    where: {
-        type: 4
-    },
-    parseData: function(res) {
-        return {
+
+  <table class="layui-hide" lay-filter="test" id="test"></table>
+
+  <script src="../../layui.js" charset="utf-8"></script>
+  <script src="../../js/jquery-3.2.1.min.js"></script>
+  <script src="../../js/ip.js"></script>
+  <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+  <script>
+    //获取用户信息
+    var info = layui.sessionData('test');
+    var userId = info.userInfo[0].id;
+    var userType = info.userInfo[0].userType;
+    layui.use('table', function () {
+      var table = layui.table
+      , layer = layui.layer;
+
+      table.render({
+        elem: '#test'
+        , url: Api + '/pcArticleManagement/pcOwnDiaryList'
+        , request: {
+          limitName: 'pageSize'
+        },
+        where: {
+          type: 4
+        },
+        parseData: function (res) {
+          return {
             "data": res.data.articleEntities,
-            "code" : res.code, //解析接口状态
-            "msg" : res.msg, //解析提示文本
+            "code": res.code, //解析接口状态
+            "msg": res.msg, //解析提示文本
             "count": res.data.count
-        };
-    }
-    ,response: {
-        statusName:'code',
-        statusCode: "1" //规定成功的状态码，默认：0
-    } 
-    ,cols: [[
-      {type:'numbers', width:80, title: '序号', sort: true}
-      ,{field:'nickName', width:180, title: '用户名'}
-      ,{field:'contentType', width:130, title: '类型'}
-      ,{field:'diaryDontent', title: '内容', width:600}
-      ,{field:'createDate', width:200, title: '发表时间', sort: true}
-      ,{field:'', title: '写回答', width:87, toolbar: "#bar"}
-    ]]
-    ,page: true
-  });
-
-  table.on('tool(test)', function(obj) {
-    console.log(obj.data.diaryId);
-    //页面层
-
-    layer.open({
-      id : 'questionTableIframe',
-      title : '写回答',
-      type: 2,
-      skin: 'layui-layer-rim', //加上边框
-      area: ['950px', '600px'], //宽高
-      content: 'publishedAnswer.html'
-      ,btn: ['提交回答', '全部关闭'] //只是为了演示
-        ,yes: function(){
-          //调用子页面的方法.
-          var childWindow = $("#layui-layer-iframe1").contentWindow; //表示获取了嵌入在iframe中的子页面的window对象。  []将JQuery对象转成DOM对象，用DOM对象的contentWindow获取子页面window对象。
-          childWindow.getContent();  //调用子页面中的getContent方法。
-
-          layer.closeAll();
+          };
         }
-        ,btn2: function(){
-          layer.closeAll();
+        , response: {
+          statusName: 'code',
+          statusCode: "1" //规定成功的状态码，默认：0
         }
+        , cols: [[
+          { type: 'numbers', width: 80, title: '序号', sort: true }
+          , { field: 'nickName', width: 180, title: '用户名' }
+          , { field: 'diaryDontent', title: '内容', width: 600 }
+          , { field: 'createDate', width: 200, title: '发表时间', sort: true }
+          , { field: '', title: '写回答', width: 87, toolbar: "#bar" }
+        ]]
+        , page: true
+      });
+
+      table.on('tool(test)', function (obj) {
+        layer.open({
+          id: 'questionTableIframe',
+          title: '写回答',
+          type: 2,
+          skin: 'layui-layer-rim', //加上边框
+          area: ['950px', '600px'], //宽高
+          content: 'publishedAnswer.html'
+          , btn: ['提交回答', '全部关闭'] //只是为了演示
+          , yes: function (index, iframe1) {
+            //调用子页面的方法.
+            var childWindow = $(iframe1).find("iframe")[0].contentWindow; //表示获取了嵌入在iframe中的子页面的window对象。  []将JQuery对象转成DOM对象，用DOM对象的contentWindow获取子页面window对象。
+            var answerContent = childWindow.callbackdata();  //调用子页面中的getContent方法。
+            $.ajax({
+              type: "POST",
+              url: Api + '/pcArticleManagement/pcReleaseAnswer',
+              data: {
+                questionId: obj.data.diaryId,
+                answerContent: answerContent,
+                userId: userId,
+                userType: userType
+              },
+              success: function (response) {
+                if (response.code == 1) {
+                  //配置一个透明的询问框
+                  layer.msg('回答成功！', {
+                    time: 3000, //3s后自动关闭
+                    btn: ['知道了']
+                  });
+                } else {
+                  //配置一个透明的询问框
+                  layer.msg('回答失败', {
+                    time: 3000, //3s后自动关闭
+                    btn: ['知道了']
+                  });
+                }
+              }, error: function () {
+                //配置一个透明的询问框
+                layer.msg('系统异常！请联系管理员', {
+                  time: 3000, //3s后自动关闭
+                  btn: ['知道了']
+                });
+              }
+            });
+            layer.closeAll();
+          }
+          , btn2: function () {
+            layer.closeAll();
+          }
+        });
+      });
     });
-  });
-});
 
-</script>
-<script type="text/html" id="bar">
+  </script>
+  <script type="text/html" id="bar">
     <button class="layui-btn layui-btn-sm" lay-event="update">写回答</button>
 </script>
 
 </body>
+
 </html>

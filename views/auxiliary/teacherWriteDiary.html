@@ -64,6 +64,15 @@
   <form class="layui-form" action="" id="addGoodsForm">
 
     <div class="layui-form-item">
+      <label class="layui-form-label">老师</label>
+      <div class="layui-input-block">
+        <select name="teacherId" id="teacherId" lay-verify="required" lay-reqText="您还没有选择老师！">
+          <option value=""></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
       <label class="layui-form-label">日记类型</label>
       <div class="layui-input-block">
         <select name="interest" lay-filter="aihao">
@@ -116,6 +125,20 @@
   <script src="../../js/ip.js"></script>
   <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
   <script>
+    $(function () {
+      $.ajax({
+        type: "POST",
+        url: Api + '/pcArticleManagement/queryVirtualTeacher',
+        success: function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+            $("#teacherId").append("<option value='" + response.data[i].teacherId + "'>" + response.data[i].teacherNm + "</option>");//新增
+          }
+          layui.form.render('select');
+        }, error: function () {
+          alertLayer("获取数据失败", "error");
+        }
+      });
+    });
 
     $(document).on("mouseenter mouseleave", ".file-iteme", function (event) {
       if (event.type === "mouseenter") {
@@ -133,10 +156,7 @@
     $(document).on("click", ".file-iteme .handle", function (event) {
       $(this).parent().remove();
     });
-    //获取用户信息
-    var info = layui.sessionData('test');
-    var userId = info.userInfo[0].id;
-    var userType = info.userInfo[0].userType;
+
     layui.use(['form', 'layedit', 'laydate', 'upload'], function () {
       var form = layui.form
         , layer = layui.layer
@@ -209,10 +229,9 @@
           data: {
             type: 2,
             contentType: data.field.interest,
-            organId: userId,
-            //teacherId : 12,
+            currentUserId : data.field.teacherId,
             browseType: 'Y',
-            userType: userType,
+            userType: 2,
             diaryContent: data.field.diaryContent,
             imageUrl: imageUrl,
             videoUrl: data.field.videoUrl == null ? "" : data.field.videoUrl,
