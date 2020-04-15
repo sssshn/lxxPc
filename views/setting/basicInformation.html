@@ -202,33 +202,46 @@
           $("#contactName").attr("value", data.contactNm);
           $("#contactPhone").attr("value", data.contactPhone);
           $("#organIntro").val(data.organIntro);
-          $("#provinceId").val(data.provinceId);
-          $("#cityId").val(data.cityId);
-          $("#districtId").val(data.districtId);
+          if(data.provinceId != null) {
+            $("#provinceId").val(data.provinceId);
+          }
+          if(data.cityId != null) {
+            $("#cityId").val(data.cityId);
+          }       
+          if(data.districtId != null) {
+            $("#districtId").val(data.districtId);
+          }
           $("#logPath").attr("src", data.logPath);
-          for (var i = 0; i < data.certifPathArr.length; i++) {
-            $('#demo2').append(
-              '<div id="" class="file-iteme">' +
-              '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
-              '<img name="certifPath" id="certifPath" style="width: 100px;height: 100px;" src=' + data.certifPathArr[i] + '>' +
-              '</div>'
-            )
+          if (data.certifPathArr != null) {
+            for (var i = 0; i < data.certifPathArr.length; i++) {
+              $('#demo2').append(
+                '<div id="" class="file-iteme">' +
+                '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                '<img name="certifPath" id="certifPath" style="width: 100px;height: 100px;" src=' + data.certifPathArr[i] + '>' +
+                '</div>'
+              )
+            }
           }
-          for (var i = 0; i < data.honorPathArr.length; i++) {
-            $('#demo3').append(
-              '<div id="" class="file-iteme">' +
-              '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
-              '<img name="honorPath" id="honorPath" style="width: 100px;height: 100px;" src=' + data.honorPathArr[i] + '>' +
-              '</div>'
-            )
+          if (data.honorPathArr != null) {
+            for (var i = 0; i < data.honorPathArr.length; i++) {
+              $('#demo3').append(
+                '<div id="" class="file-iteme">' +
+                '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                '<img name="honorPath" id="honorPath" style="width: 100px;height: 100px;" src=' + data.honorPathArr[i] + '>' +
+                '</div>'
+              )
+            }
           }
-          for (var i = 0; i < data.organPathArr.length; i++) {
-            $('#demo4').append(
-              '<div id="" class="file-iteme">' +
-              '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
-              '<img name="organPath" id="organPath" style="width: 100px;height: 100px;" src=' + data.organPathArr[i] + '>' +
-              '</div>'
-            )
+
+          if (data.organPathArr != null) {
+            for (var i = 0; i < data.organPathArr.length; i++) {
+              $('#demo4').append(
+                '<div id="" class="file-iteme">' +
+                '<div class="handle"><span class="glyphicon glyphicon-trash">删除</span></div>' +
+                '<img name="organPath" id="organPath" style="width: 100px;height: 100px;" src=' + data.organPathArr[i] + '>' +
+                '</div>'
+              )
+            }
           }
         }
       });

@@ -18,9 +18,11 @@
           <dl class="layui-nav-child">
             <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
             <dd><a href="">修改密码</a></dd>
+            <hr>
+            <dd layadmin-event="logout" style="text-align: center;"><a href="javascript:;" onclick="logout()">退出</a>
+            </dd>
           </dl>
         </li>
-        <li class="layui-nav-item"><a href="">退出</a></li>
       </ul>
     </div>
 
@@ -84,10 +86,7 @@
   <script src="js/jquery-3.2.1.min.js"></script>
   <script>
 
-    //获取用户信息
-    var info = layui.sessionData('test');
-    var userName = info.userInfo[0].userName;
-    var userHead = info.userInfo[0].userHead;
+
     //JavaScript代码区域
     layui.use('element', function () {
       var element = layui.element;
@@ -101,10 +100,22 @@
         document.getElementById("iMain").src = ht;
       });
 
-      var tmpInfo = '<a href="javascript:;"><img src="' + userHead + '" class="layui-nav-img">' + userName + '</a>'
-      $('#userInfoLi').append(tmpInfo);
-
+      //获取用户信息
+      var info = layui.sessionData('test');
+      if (JSON.stringify(info) == "{}") {
+        window.location.href = "login.html";
+      } else {
+        var userName = info.userInfo[0].userName;
+        var userHead = info.userInfo[0].userHead;
+        var tmpInfo = '<a href="javascript:;"><img src="' + userHead + '" class="layui-nav-img">' + userName + '</a>'
+        $('#userInfoLi').append(tmpInfo);
+      }
     });
+
+    function logout() {
+      layui.sessionData('test', null); //删除test表
+      window.location.href = "login.html";
+    }
   </script>
 </body>
 
