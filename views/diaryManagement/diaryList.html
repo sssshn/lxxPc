@@ -1,103 +1,117 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Layui</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="../../css/layui.css"  media="all">
+  <link rel="stylesheet" href="../../css/layui.css" media="all">
+  <link rel="stylesheet" href="../../css/admin.css" media="all">
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
-<body>
- 
-<table class="layui-hide" lay-filter="test" id="test"></table>
-                    
-<script src="../../layui.js" charset="utf-8"></script>
-<script src="../../js/jquery-3.2.1.min.js"></script>
-<script src="../../js/ip.js"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
- 
-<script>
-  //获取用户信息
-var info = layui.sessionData('test');
-var userId = info.userInfo[0].id;
-var userType = info.userInfo[0].userType;
-layui.use('table', function(){
-  var table = layui.table;
-  
-  table.render({
-    elem: '#test'
-    ,url: Api + '/article/pcOwnDiaryList'
-    ,request: {
-        limitName: 'pageSize'
-    },
-    where: {
-        type: 2,
-        organ_id : userId,
-        user_type : userType
-    },
-    parseData: function(res) {
-        return {
-            "data": res.data.articleEntities,
-            "code" : res.code, //解析接口状态
-            "msg" : res.msg, //解析提示文本
-            "count": res.data.count
-        };
-    }
-    ,response: {
-        statusName:'code',
-        statusCode: "1" //规定成功的状态码，默认：0
-    } 
-    ,cols: [[
-      {type:'numbers', width:60, title: '序号', sort: true}
-      ,{field:'diaryDontent', width:560, title: '内容'}
-      ,{field:'browseCount', width:110, title: '浏览次数', sort: true}
-      ,{field:'collectCount', width:110, title: '收藏次数', sort: true}
-      ,{field:'likeCount', width:110, title: '点赞次数', sort: true}
-      ,{field:'createDate', width:125, title: '发表时间', sort: true}
-      ,{field:'', width:60, title: '操作', toolbar: '#bar'}
-    ]]
-    ,page: true
-  });
 
-  table.on('tool(test)', function(obj) {
-    layer.confirm('确认删除么', function(index) {
-      $.ajax({ 
-            type: "GET", 
-            url: Api + "/pcArticleManagement/deleteDiary", 
-            data:{
-              diaryId : obj.data.diaryId
+<body>
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">日记列表</div>
+          <div class="layui-card-body" pad15>
+            <table class="layui-hide" lay-filter="test" id="test"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../layui.js" charset="utf-8"></script>
+  <script src="../../js/jquery-3.2.1.min.js"></script>
+  <script src="../../js/ip.js"></script>
+  <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+  <script>
+    //获取用户信息
+    var info = layui.sessionData('test');
+    var userId = info.userInfo[0].id;
+    var userType = info.userInfo[0].userType;
+    layui.use('table', function () {
+      var table = layui.table;
+
+      table.render({
+        elem: '#test'
+        , url: Api + '/article/pcOwnDiaryList'
+        , request: {
+          limitName: 'pageSize'
+        },
+        where: {
+          type: 2,
+          organ_id: userId,
+          user_type: userType
+        },
+        parseData: function (res) {
+          return {
+            "data": res.data.articleEntities,
+            "code": res.code, //解析接口状态
+            "msg": res.msg, //解析提示文本
+            "count": res.data.count
+          };
+        }
+        , response: {
+          statusName: 'code',
+          statusCode: "1" //规定成功的状态码，默认：0
+        }
+        , cols: [[
+          { type: 'numbers', width: 60, title: '序号', sort: true }
+          , { field: 'diaryDontent', width: 560, title: '内容' }
+          , { field: 'browseCount', width: 110, title: '浏览次数', sort: true }
+          , { field: 'collectCount', width: 110, title: '收藏次数', sort: true }
+          , { field: 'likeCount', width: 110, title: '点赞次数', sort: true }
+          , { field: 'createDate', width: 125, title: '发表时间', sort: true }
+          , { field: '', width: 60, title: '操作', toolbar: '#bar' }
+        ]]
+        , page: true
+      });
+
+      table.on('tool(test)', function (obj) {
+        layer.confirm('确认删除么', function (index) {
+          $.ajax({
+            type: "GET",
+            url: Api + "/pcArticleManagement/deleteDiary",
+            data: {
+              diaryId: obj.data.diaryId
             },
-            success:function(res){
-              if(res.code == 1) {
+            success: function (res) {
+              if (res.code == 1) {
                 layer.msg('删除成功！');
                 //执行重载
                 table.reload('test', {
                   page: {
                     curr: 1 //重新从第 1 页开始
                   }
-                  ,where: {
+                  , where: {
                     type: 1,
-                    organ_id : userId,
-                    user_type : userType
+                    organ_id: userId,
+                    user_type: userType
                   }
                 });
               } else {
                 layer.msg('删除失败！请联系管理员');
               }
             },
-            error:function(error){
+            error: function (error) {
               layer.msg('删除失败！请联系管理员');
             }
-      })
+          })
+        });
+      });
     });
-  });
-});
-</script>
-<script type="text/html" id="bar">
+  </script>
+  <script type="text/html" id="bar">
   <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
 </script>
 
 </body>
+
 </html>
