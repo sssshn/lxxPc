@@ -95,14 +95,15 @@
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">头像</label>
-                                    <div class="layui-input-block">
-                                        <div class="layui-upload">
-                                            <button type="button" class="layui-btn" id="test1">上传头像</button>
-                                            <div class="layui-upload-list">
-                                                <img class="layui-upload-img" id="imagePath" height="100" width="100">
-                                                <p id="demoText"></p>
-                                            </div>
-                                        </div>
+                                    <div class="layui-input-inline" id="layer-photos-demo">
+                                        <input name="imagePath" lay-verify="required" id="LAY_avatarSrc"
+                                            placeholder="图片地址" value="" class="layui-input">
+                                    </div>
+                                    <div class="layui-input-inline layui-btn-container" style="width: auto;">
+                                        <button type="button" class="layui-btn layui-btn-primary" id="LAY_avatarUpload">
+                                            <i class="layui-icon">&#xe67c;</i>上传头像
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-primary" id="avartatPreview">查看头像</button>
                                     </div>
                                 </div>
 
@@ -135,102 +136,105 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="/layui.js" charset="utf-8"></script>
-    <script src="../../js/ip.js"></script>
-    <script src="../../js/jquery-3.2.1.min.js"></script>
-    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-    <script>
-        layui.use(['form', 'laydate', 'upload'], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , upload = layui.upload
-                , laydate = layui.laydate;
-            //日期
-            laydate.render({
-                elem: '#teacherDate'
+        <script src="/layui.js" charset="utf-8"></script>
+        <script src="../../js/ip.js"></script>
+        <script src="../../js/jquery-3.2.1.min.js"></script>
+        <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+        <script>
+            $("#avartatPreview").click(function () {
+                layui.layer.ready(function () {
+                    var i = $("#LAY_avatarSrc").val();
+                    layui.layer.photos({ photos: { "title": "查看头像", "data": [{ "src": i }] }, "shade": .01, "closeBtn": 1, "anim": 5, "shadeClose": false })
+                });
             });
+            layui.use(['form', 'laydate', 'upload'], function () {
+                var form = layui.form
+                    , layer = layui.layer
+                    , upload = layui.upload
+                    , laydate = layui.laydate;
+                //日期
+                laydate.render({
+                    elem: '#teacherDate'
+                });
 
-            //头像上传
-            var uploadInst = upload.render({
-                elem: '#test1'
-                , url: Api + '/upload/layUploadImage' //改成您自己的上传接口
-                , accept: 'images' //图片
-                , before: function (obj) {
+                //头像上传
+                var uploadInst = upload.render({
+                    elem: '#LAY_avatarUpload'
+                    , url: Api + '/upload/layUploadImage' //改成您自己的上传接口
+                    , accept: 'images' //图片
+                    , before: function (obj) {
 
-                }
-                , done: function (res) {
-                    //如果上传失败
-                    if (res.code > 0) {
-                        return layer.msg('上传失败');
-                    } else {
-                        //上传成功
-                        $('#imagePath').attr('src', res.data.src);
-                        layer.msg('上传头像成功！');
                     }
-
-                }
-                , error: function () {
-                    //演示失败状态，并实现重传
-                    var demoText = $('#demoText');
-                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                    demoText.find('.demo-reload').on('click', function () {
-                        uploadInst.upload();
-                    });
-                }
-            });
-
-            //监听提交
-            form.on('submit(demo1)', function (data) {
-                $.ajax({
-                    type: 'POST',
-                    url: Api + '/pcArticleManagement/createTeacher',
-                    data: {
-                        teacherNm: data.field.teacherNm,
-                        gender: data.field.gender,
-                        mobile: data.field.mobile,
-                        imagePath: $("#imagePath")[0].src,
-                        age: data.field.age,
-                        graduateUniversity: data.field.graduateUniversity,
-                        teacherIntroduce: data.field.teacherIntroduce,
-                        teacherDate: data.field.teacherDate,
-                        teacherPrize: data.field.teacherPrize,
-                        holdOffice: data.field.holdOffice,
-                        address: data.field.address,
-                        classify: "3",
-                        teacherCertificate: data.field.teacherCertificate
-                    },
-                    success: function (response) {
-                        if (response.code == 1) {
-                            //配置一个透明的询问框
-                            layer.msg('创建老师成功！', {
-                                time: 5000, //3s后自动关闭
-                                btn: ['知道了']
-                            });
-                            $("#form1")[0].reset();
-                            layui.form.render();
-                            $('#imagePath').attr("src", "");
+                    , done: function (res) {
+                        //如果上传失败
+                        if (res.code > 0) {
+                            return layer.msg('上传失败');
                         } else {
+                            //上传成功
+                            $('#LAY_avatarSrc').val(res.data.src);
+                            layer.msg('上传头像成功！',{icon:5});
+                        }
+                    }
+                    , error: function () {
+                        //演示失败状态，并实现重传
+                        var demoText = $('#demoText');
+                        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                        demoText.find('.demo-reload').on('click', function () {
+                            uploadInst.upload();
+                        });
+                    }
+                });
+
+                //监听提交
+                form.on('submit(demo1)', function (data) {
+                    $.ajax({
+                        type: 'POST',
+                        url: Api + '/pcArticleManagement/createTeacher',
+                        data: {
+                            teacherNm: data.field.teacherNm,
+                            gender: data.field.gender,
+                            mobile: data.field.mobile,
+                            imagePath: data.field.imagePath,
+                            age: data.field.age,
+                            graduateUniversity: data.field.graduateUniversity,
+                            teacherIntroduce: data.field.teacherIntroduce,
+                            teacherDate: data.field.teacherDate,
+                            teacherPrize: data.field.teacherPrize,
+                            holdOffice: data.field.holdOffice,
+                            address: data.field.address,
+                            classify: "3",
+                            teacherCertificate: data.field.teacherCertificate
+                        },
+                        success: function (response) {
+                            if (response.code == 1) {
+                                //配置一个透明的询问框
+                                layer.msg('创建老师成功！', {
+                                    time: 5000, //3s后自动关闭
+                                    btn: ['知道了']
+                                });
+                                $("#form1")[0].reset();
+                                layui.form.render();
+                            } else {
+                                //配置一个透明的询问框
+                                layer.msg('创建老师失败！', {
+                                    time: 5000, //3s后自动关闭
+                                    btn: ['知道了']
+                                });
+                            }
+                        },
+                        error: function (error) {
                             //配置一个透明的询问框
-                            layer.msg('创建老师失败！', {
+                            layer.msg('创建老师失败！请联系管理员', {
                                 time: 5000, //3s后自动关闭
                                 btn: ['知道了']
                             });
-                        }
-                    },
-                    error: function (error) {
-                        //配置一个透明的询问框
-                        layer.msg('创建老师失败！请联系管理员', {
-                            time: 5000, //3s后自动关闭
-                            btn: ['知道了']
-                        });
-                    },
-                })
-                return false;
+                        },
+                    })
+                    return false;
+                });
             });
-        });
-    </script>
+        </script>
 
 </body>
 

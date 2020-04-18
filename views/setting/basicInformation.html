@@ -133,14 +133,16 @@
 
               <div class="layui-form-item">
                 <label class="layui-form-label">头像</label>
-                <div class="layui-input-block">
-                  <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="test1">上传头像</button>
-                    <div class="layui-upload-list">
-                      <img class="layui-upload-img" id="logPath" name="logPath" height="100" width="100">
-                      <p id="demoText"></p>
-                    </div>
-                  </div>
+                <div class="layui-input-inline" id="layer-photos-demo">
+                  <input name="logPath" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址"
+                    value=""
+                    class="layui-input">
+                </div>
+                <div class="layui-input-inline layui-btn-container" style="width: auto;">
+                  <button type="button" class="layui-btn layui-btn-primary" id="LAY_avatarUpload">
+                    <i class="layui-icon">&#xe67c;</i>上传头像
+                  </button>
+                  <button type="button" class="layui-btn layui-btn-primary" id="avartatPreview">查看头像</button>
                 </div>
               </div>
 
@@ -204,6 +206,10 @@
     var info = layui.sessionData('test');
     var userId = info.userInfo[0].id;
     var userType = info.userInfo[0].userType;
+    $("#avartatPreview").click(function () {
+      var i = $("#LAY_avatarSrc").val(); 
+      layui.layer.photos({ photos: { title: "查看头像", data: [{ src: i }] }, shade: .01, closeBtn: 1, anim: 5 })
+    });
     $(function () {
       $.ajax({
         url: Api + "/organManager/getOrganDetails?organId=" + userId,
@@ -224,7 +230,7 @@
           if (data.districtId != null) {
             $("#districtId").val(data.districtId);
           }
-          $("#logPath").attr("src", data.logPath);
+          $("#LAY_avatarSrc").val(data.logPath);
           if (data.certifPathArr != null) {
             for (var i = 0; i < data.certifPathArr.length; i++) {
               $('#demo2').append(
@@ -284,7 +290,7 @@
 
       //头像上传
       var uploadInst = upload.render({
-        elem: '#test1'
+        elem: '#LAY_avatarUpload'
         , url: Api + '/upload/layUploadImage' //改成您自己的上传接口
         , accept: 'images' //图片
         , before: function (obj) {
@@ -296,8 +302,8 @@
             return layer.msg('上传失败');
           } else {
             //上传成功
-            $('#logPath').attr('src', res.data.src);
-            layer.msg('上传头像成功！');
+            $('#LAY_avatarSrc').val(res.data.src);
+            layer.msg('上传头像成功！',{icon:5});
           }
 
         }
@@ -443,7 +449,7 @@
             provinceId: data.field.provinceId,
             cityId: data.field.cityId,
             districtId: data.field.districtId,
-            logPath: $("#logPath")[0].src,
+            logPath: data.field.logPath,
             certifPath: certifPath,
             organPath: organPath,
             honorPath: honorPath
