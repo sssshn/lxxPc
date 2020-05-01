@@ -149,6 +149,7 @@
     var info = layui.sessionData('test');
     var userId = info.userInfo[0].id;
     var userType = info.userInfo[0].userType;
+    var user_id = info.userInfo[0].user_id;
     layui.use(['form', 'layedit', 'laydate', 'upload'], function () {
       var form = layui.form
         , layer = layui.layer
@@ -219,10 +220,11 @@
           type: 'get',
           url: Api + '/article/pcWriteDiary',
           data: {
+            userId : userType == 3 ? null : user_id,
+            currentUserId : userType == 3 ? null : userId,
             type: 2,
             contentType: data.field.interest,
-            organId: userId,
-            //teacherId : 12,
+            organId: userType == 3 ? userId : null,
             browseType: 'Y',
             userType: userType,
             diaryContent: data.field.diaryContent,
@@ -243,7 +245,7 @@
               $('#videoDemo').empty();
             } else {
               //配置一个透明的询问框
-              layer.msg('发表失败！', {
+              layer.msg('发表失败！' + response.msg, {
                 time: 3000, //20s后自动关闭
                 btn: ['知道了']
               });

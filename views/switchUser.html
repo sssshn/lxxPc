@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>乐学秀管理系统</title>
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/layui.css" media="all">
+</head>
+
+<body class="layui-layout-body">
+    <ul style="list-style:none" id="childList">
+    </ul>
+    <ul style="list-style:none" id="teacherList">
+    </ul>
+</body>
+<script src="../layui.js"></script>
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/ip.js"></script>
+<script>
+    var info = layui.sessionData('test');
+    var userId = info.userInfo[0].user_id;
+    $(function () {
+        $.ajax({
+            url: Api + "/pcArticleManagement/getChildAndTeacherByUserId",
+            type: "post",
+            data: {
+                userId: userId
+            },
+            success: function (res) {
+                if (res.code == 1) {
+                    var childList = res.data.childList;
+                    for (var i = 0; i < childList.length; i++) {
+                        var obj = JSON.stringify(childList[i]);
+                        $("#childList").append("<li><a href='javascript:;' onclick='switchUser(" + obj + ", 1)'><img src='" + childList[i].imagePath + "' class='layui-nav-img'/>" + childList[i].childNm + "</a></li>");
+                    }
+                    var teacherList = res.data.teacherList;
+                    for (var i = 0; i < teacherList.length; i++) {
+                        var obj = JSON.stringify(childList[i]);
+                        $("#teacherList").append("<li><a href='javascript:;' onclick='switchUser(" + obj + ", 2)'><img src='" + teacherList[i].imagePath + "' class='layui-nav-img'/>" + teacherList[i].teacherNm + "</a></li>");
+                    }
+                }
+            }
+
+        });
+    });
+    function switchUser(str, userType) {
+        if (userType == 1) {
+            layui.sessionData('test', {
+                key: 'userInfo'
+                , value: [{
+                    user_id: str.userId,
+                    id: str.childId,
+                    userType: userType,
+                    userName: str.childNm,
+                    userHead: str.imagePath
+                }]
+            });
+        } else if (userType == 2) {
+            layui.sessionData('test', {
+                key: 'userInfo'
+                , value: [{
+                    user_id: str.userId,
+                    id: str.teacherId,
+                    userType: userType,
+                    userName: str.teacherNm,
+                    userHead: str.imagePath
+                }]
+            });
+        }
+        alert('切换用户成功！');
+        parent.location.reload();
+    }
+</script>
+
+</html>

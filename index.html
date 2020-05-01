@@ -8,7 +8,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>乐学秀管理系统</title>
-  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon"/>
+  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
   <link rel="stylesheet" href="css/layui.css" media="all">
   <link rel="stylesheet" href="css/admin.css" media="all">
 </head>
@@ -26,8 +26,9 @@
       <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item" id="userInfoLi">
           <dl class="layui-nav-child">
-            <dd><a href="/views/setting/basicInformation.html">基本资料</a></dd>
-            <dd><a href="/views/setting/changePassword.html">修改密码</a></dd>
+            <dd class="organType"><a href="/views/setting/basicInformation.html">基本资料</a></dd>
+            <dd class="organType"><a href="/views/setting/changePassword.html">修改密码</a></dd>
+            <dd class=""><a href="/views/switchUser.html">切换用户</a></dd>
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a href="javascript:;" onclick="logout()">退出</a></dd>
           </dl>
@@ -50,7 +51,8 @@
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
           lay-filter="layadmin-system-side-menu">
           <li class="layui-nav-item layui-nav-itemed">
-            <a class="" id="home" href="/views/diaryManagement/test.html"><i class="layui-icon layui-icon-home"></i><cite>主页</cite></a>
+            <a class="" id="home" href="/views/diaryManagement/test.html"><i
+                class="layui-icon layui-icon-home"></i><cite>主页</cite></a>
           </li>
           <li class="layui-nav-item">
             <a class="" href="javascript:;"><i class="layui-icon layui-icon-template"></i><cite>日记管理</cite></a>
@@ -62,7 +64,7 @@
               <dd><a href="/views/diaryManagement/questionTable.html">问题列表</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item">
+          <li class="layui-nav-item organType">
             <a class="" href="javascript:;"><i class="layui-icon layui-icon-app"></i><cite>辅助功能</cite></a>
             <dl class="layui-nav-child">
               <!-- <dd><a href="/views/setting/createTeacher.html">老师列表</a></dd> -->
@@ -71,7 +73,7 @@
               <dd><a href="/views/auxiliary/teacherWriteDiary.html">老师发日记</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item">
+          <li class="layui-nav-item organType">
             <a href="javascript:;"><i class="layui-icon layui-icon-set"></i><cite>设置</cite></a>
             <dl class="layui-nav-child">
               <dd>
@@ -130,6 +132,13 @@
         var userHead = info.userInfo[0].userHead;
         var tmpInfo = '<a href="javascript:;"><img src="' + userHead + '" class="layui-nav-img"/><cite>' + userName + '</cite></a><span class="layui-nav-more"></span>'
         $('#userInfoLi').prepend(tmpInfo);
+        var userType = info.userInfo[0].userType;
+        if (userType != 3) {
+          var otherComment = document.getElementsByClassName("organType");//获取到的是一个类数组
+          for (var i = 0; i < otherComment.length; i++) {
+            otherComment[i].style.display = "none";
+          }
+        }
       }
     });
 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
+</head>
+
+<body>
+    <span id="login_container"></span>
+    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+    <script src="layui.js"></script>
+    <script src="js/ip.js"></script>
+    <script>
+        var state = Math.ceil(Math.random() * 1000);
+        var obj = new WxLogin({
+            self_redirect: true,
+            id: "login_container",
+            appid: "wxa19af704bffb5615",
+            scope: "snsapi_login",
+            redirect_uri: Api + "/user/login",
+            state: state,
+            style: "black",
+            href: ""
+        });
+
+        let wsname = "ws://152.136.31.156:8080/zlzl/socketServer/" + state;
+        var ws;
+        ws = new WebSocket(wsname);
+        //连接成功触发
+        ws.onopen = function (evt) {
+        };
+        //这个是接收后台发送信息的方法
+        ws.onmessage = function (evt) {
+            var data = JSON.parse(evt.data);
+            if (data.code == 0) {
+                alert(data.msg);
+            } else {
+                layui.sessionData('test', {
+                    key: 'userInfo'
+                    , value: [{
+                        user_id : data.data.userId,
+                        id: data.data.childId,
+                        userType: 2,
+                        userName: data.data.childNm,
+                        userHead: data.data.imagePath
+
+                    }]
+                });
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+
+</html>
