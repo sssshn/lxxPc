@@ -55,7 +55,7 @@
                 <div class="layui-input-block">
                   <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
-                    <div id="videoDemo"></div>
+                    <div class="layui-upload-list" id="videoDemo"> </div>
                   </div>
                 </div>
               </div>
@@ -130,7 +130,11 @@
         , url: Api + '/upload/layUploadVideo' //改成您自己的上传接口
         , accept: 'video' //视频
         , before: function (obj) {
-          $('#videoDemo').empty();
+          //预读本地文件示例，不支持ie8
+          $("#videoDemo").empty();
+          obj.preview(function (index, file, result) {
+            $('#videoDemo').append('<video class="layui-upload-video" height="150" width="300" src="' + result + '" controls="controls"></video>'); //图片链接（base64）
+          });
           layer.msg('视频上传中...', {
             icon: 16,
             shade: 0.01,
@@ -140,7 +144,7 @@
         , done: function (res) {
           //上传完毕
           layer.close(layer.msg());
-          $('#videoDemo').append('<input name="videoUrl" value="' + res.data.src + '">'
+          $('#videoDemo').append('<input name="videoUrl" type="hidden" value="' + res.data.src + '">'
             + '<input type="hidden" name="videoImageUrl" value="' + res.data.videoImagePath + '">'
           );
           layer.msg("上传视频成功！");

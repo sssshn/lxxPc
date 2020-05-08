@@ -132,10 +132,17 @@
               </div>
 
               <div class="layui-form-item">
+                <label class="layui-form-label">乘车路线</label>
+                <div class="layui-input-block">
+                  <input type="text" name="busLine" id="busLine" autocomplete="off" placeholder="请输入乘车路线"
+                    class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
                 <label class="layui-form-label">头像</label>
                 <div class="layui-input-inline" id="layer-photos-demo">
-                  <input name="logPath" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址"
-                    value=""
+                  <input name="logPath" lay-verify="required" id="LAY_avatarSrc" placeholder="图片地址" value=""
                     class="layui-input">
                 </div>
                 <div class="layui-input-inline layui-btn-container" style="width: auto;">
@@ -152,7 +159,7 @@
                   <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test2">上传证书图片</button>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
-                      预览图：
+                      证书预览图：
                       <div class="layui-upload-list uploader-list" id="demo2" style="overflow: auto;"></div>
                     </blockquote>
                   </div>
@@ -165,7 +172,7 @@
                   <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test3">上传荣誉图片</button>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
-                      预览图：
+                      荣誉图片预览图：
                       <div class="layui-upload-list uploader-list" id="demo3" style="overflow: auto;"></div>
                     </blockquote>
                   </div>
@@ -178,9 +185,19 @@
                   <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test4">上传机构环境图片</button>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;;width: 88%">
-                      预览图：
+                      机构环境预览图：
                       <div class="layui-upload-list uploader-list" id="demo4" style="overflow: auto;"></div>
                     </blockquote>
+                  </div>
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">品牌介绍</label>
+                <div class="layui-input-block">
+                  <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test5"><i class="layui-icon"></i>上传视频</button>
+                    <div class="layui-upload-list" id="videoDemo"></div>
                   </div>
                 </div>
               </div>
@@ -207,7 +224,7 @@
     var userId = info.userInfo[0].id;
     var userType = info.userInfo[0].userType;
     $("#avartatPreview").click(function () {
-      var i = $("#LAY_avatarSrc").val(); 
+      var i = $("#LAY_avatarSrc").val();
       layui.layer.photos({ photos: { title: "查看头像", data: [{ src: i }] }, shade: .01, closeBtn: 1, anim: 5 })
     });
     $(function () {
@@ -221,6 +238,7 @@
           $("#contactName").attr("value", data.contactNm);
           $("#contactPhone").attr("value", data.contactPhone);
           $("#organIntro").val(data.organIntro);
+          $("#busLine").val(data.busLine);
           if (data.provinceId != null) {
             $("#provinceId").val(data.provinceId);
           }
@@ -262,6 +280,8 @@
               )
             }
           }
+          $('#videoDemo').append('<video class="layui-upload-video" height="150" width="300" src="' + data.brandIntroduction + '" controls="controls"></video>');
+          $('#videoDemo').append('<input type="hidden" name="videoUrl" value="' + data.brandIntroduction + '">');
         }
       });
     });
@@ -303,7 +323,7 @@
           } else {
             //上传成功
             $('#LAY_avatarSrc').val(res.data.src);
-            layer.msg('上传头像成功！',{icon:5});
+            layer.msg('上传头像成功！', { icon: 5 });
           }
 
         }
@@ -395,6 +415,31 @@
         }
       });
 
+      //品牌介绍视频上传
+      upload.render({
+        elem: '#test5'
+        , url: Api + '/upload/layUploadVideo' //改成您自己的上传接口
+        , accept: 'video' //视频
+        , before: function (obj) {
+          //预读本地文件示例，不支持ie8
+          $("#videoDemo").empty();
+          obj.preview(function (index, file, result) {
+            $('#videoDemo').append('<video class="layui-upload-video" height="150" width="300" src="' + result + '" controls="controls"></video>'); //图片链接（base64）
+          });
+          layer.msg('视频上传中...', {
+            icon: 16,
+            shade: 0.01,
+            time: 0
+          })
+        }
+        , done: function (res) {
+          //上传完毕
+          layer.close(layer.msg());
+          $('#videoDemo').append('<input type="hidden" name="videoUrl" value="' + res.data.src + '">'
+            + '<input type="hidden" name="videoImageUrl" value="' + res.data.videoImagePath + '">'
+          );
+        }
+      });
 
       //自定义验证规则
       form.verify({
@@ -452,7 +497,9 @@
             logPath: data.field.logPath,
             certifPath: certifPath,
             organPath: organPath,
-            honorPath: honorPath
+            honorPath: honorPath,
+            busLine:data.field.busLine,
+            brandIntroduction:data.field.videoUrl
           },
           success: function (response) {
             if (response.code == 1) {
